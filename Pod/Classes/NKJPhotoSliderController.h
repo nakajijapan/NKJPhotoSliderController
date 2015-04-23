@@ -11,6 +11,8 @@
 @interface NKJPhotoSliderController : UIViewController
 
 @property (nonatomic) NSInteger index;
+@property (nonatomic) UIPageControl *pageControl;
+@property (nonatomic) BOOL visiblePageControl;
 
 - (id)initWithImageURLs:(NSArray *)imageURLs;
 
