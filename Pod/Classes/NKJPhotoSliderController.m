@@ -23,8 +23,6 @@
 {
     self = [super init];
     if (self) {
-        //[self.imageURLs addObjectsFromArray:imageURLs];
-        //self.imageURLs = imageURLs.mutableCopy;
         self.imageURLs = imageURLs;
     }
     
@@ -40,6 +38,8 @@
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
     
+    self.visiblePageControl = YES;
+    
     UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     backgroundView.backgroundColor = [UIColor blackColor];
     backgroundView.alpha = 0.7;
@@ -51,7 +51,7 @@
     layout.minimumInteritemSpacing = 0;
     layout.minimumLineSpacing = 0;
     
-    //collectionView
+    // collectionView
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
                                              collectionViewLayout:layout];
     [self.collectionView registerClass:[NKJPhotoSliderCollectionViewCell class]
@@ -64,6 +64,15 @@
     self.collectionView.showsHorizontalScrollIndicator = YES;
     self.collectionView.alwaysBounceVertical = YES;
     [self.view addSubview:self.collectionView];
+    
+    if (self.visiblePageControl) {
+        self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0.0, CGRectGetHeight(self.view.frame) - 44, CGRectGetWidth(self.view.frame), 22)];
+        self.pageControl.numberOfPages = self.imageURLs.count;
+        self.pageControl.currentPage = 0;
+        self.pageControl.userInteractionEnabled = false;
+        [self.view addSubview:self.pageControl];
+    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -146,6 +155,13 @@
         CGPoint contentOffset = scrollView.contentOffset;
         contentOffset.y = self.scrollPreviewPoint.y;
         scrollView.contentOffset = contentOffset;
+    }
+    
+    
+    if (self.visiblePageControl) {
+        if (fmod(scrollView.contentOffset.x, scrollView.frame.size.width) == 0.0) {
+            self.pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+        }
     }
 
 }
