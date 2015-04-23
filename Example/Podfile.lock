@@ -1,6 +1,6 @@
 PODS:
   - FBSnapshotTestCase (1.6)
-  - NKJPhotoSliderController (0.1.0):
+  - NKJPhotoSliderController (0.1.1):
     - SDWebImage
   - SDWebImage (3.7.2):
     - SDWebImage/Core (= 3.7.2)
@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 9d5fe43b29ae3a0ed8fc829477971b281038f748
-  NKJPhotoSliderController: 39daec51a8db8158b2305a00a53fd2c27d090dde
+  NKJPhotoSliderController: 95f761f8a1101950bfe593b2164dd5415db5d517
   SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
 
-COCOAPODS: 0.36.3
+COCOAPODS: 0.36.4
