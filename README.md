@@ -1,6 +1,5 @@
 # NKJPhotoSliderController
 
-[![CI Status](http://img.shields.io/travis/nakajijapan/NKJPhotoSliderController.svg?style=flat)](https://travis-ci.org/nakajijapan/NKJPhotoSliderController)
 [![Version](https://img.shields.io/cocoapods/v/NKJPhotoSliderController.svg?style=flat)](http://cocoapods.org/pods/NKJPhotoSliderController)
 [![License](https://img.shields.io/cocoapods/l/NKJPhotoSliderController.svg?style=flat)](http://cocoapods.org/pods/NKJPhotoSliderController)
 [![Platform](https://img.shields.io/cocoapods/p/NKJPhotoSliderController.svg?style=flat)](http://cocoapods.org/pods/NKJPhotoSliderController)
