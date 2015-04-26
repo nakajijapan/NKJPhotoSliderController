@@ -26,7 +26,12 @@
     self.images = @[
                     @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image001.jpg",
                     @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image002.jpg",
-                    @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image003.jpg"
+                    @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image003.jpg",
+                    @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image004.jpg",
+                    @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image005.jpg",
+                    @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image006.jpg",
+                    @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image007.jpg",
+                    @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image008.jpg"
                     ];
     
 }
@@ -84,7 +89,6 @@
     slider.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     slider.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     slider.index = indexPath.row;
-    NSLog(@"idexPath row %ld", slider.index);
     [self presentViewController:slider animated:YES completion:nil];
 }
 

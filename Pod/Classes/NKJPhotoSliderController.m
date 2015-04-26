@@ -8,7 +8,6 @@
 
 #import "NKJPhotoSliderController.h"
 #import "NKJPhotoSliderCollectionViewCell.h"
-#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface NKJPhotoSliderController()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
@@ -98,12 +97,10 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NKJPhotoSliderCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor clearColor];
-    
+
     if (self.imageURLs > 0) {
         NSURL *imageURL = [NSURL URLWithString:self.imageURLs[indexPath.row]];
-        [cell.imageView.imageView sd_setImageWithURL:imageURL];
-        
+        [cell loadImageWithURL:imageURL];
     }
     
     return cell;
@@ -156,7 +153,6 @@
         contentOffset.y = self.scrollPreviewPoint.y;
         scrollView.contentOffset = contentOffset;
     }
-    
     
     if (self.visiblePageControl) {
         if (fmod(scrollView.contentOffset.x, scrollView.frame.size.width) == 0.0) {
