@@ -8,11 +8,10 @@ NKJPhotoSliderController can a simple photo slider and delete slider with swipin
 
 <img src="./demo.gif" width="300" />
 
-## Usage
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
+
+Xcode 6 is required.
 
 ## Installation
 
@@ -23,16 +22,16 @@ it, simply add the following line to your Podfile:
 pod "NKJPhotoSliderController"
 ```
 
-## Use
+## Usage
 
-```
+```objc
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-NKJPhotoSliderController *slider = [[NKJPhotoSliderController alloc] initWithImageURLs:self.images];
-slider.index = indexPath.row;
-[self presentViewController:slider animated:YES completion:nil];
+    NKJPhotoSliderController *slider = [[NKJPhotoSliderController alloc] initWithImageURLs:self.images];
+    slider.index = indexPath.row;
+    [self presentViewController:slider animated:YES completion:nil];
 }
 ````
 
