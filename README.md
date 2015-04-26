@@ -21,6 +21,19 @@ it, simply add the following line to your Podfile:
 pod "NKJPhotoSliderController"
 ```
 
+## Use
+
+```
+#pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+NKJPhotoSliderController *slider = [[NKJPhotoSliderController alloc] initWithImageURLs:self.images];
+slider.index = indexPath.row;
+[self presentViewController:slider animated:YES completion:nil];
+}
+````
+
 ## Author
 
 nakajijapan, pp.kupepo.gattyanmo@gmail.com
