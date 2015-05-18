@@ -43,7 +43,6 @@ const
    
     UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     backgroundView.backgroundColor = [UIColor blackColor];
-    backgroundView.alpha = 0.7;
     [self.view addSubview:backgroundView];
     
     // layout
