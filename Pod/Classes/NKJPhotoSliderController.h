@@ -8,12 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+@class NKJPhotoSliderController;
+
+@protocol NKJPhotoSliderControllerDelegate <NSObject>
+- (void)photoSliderControllerDidDismiss:(NKJPhotoSliderController *)viewController;
+@end
+
 @interface NKJPhotoSliderController : UIViewController
 
 @property (nonatomic) NSInteger index;
 @property (nonatomic) UIPageControl *pageControl;
 @property (nonatomic) BOOL visiblePageControl;
 @property (nonatomic) BOOL visibleCloseButton;
+@property (nonatomic) id<NKJPhotoSliderControllerDelegate> delegate;
 
 - (id)initWithImageURLs:(NSArray *)imageURLs;
 

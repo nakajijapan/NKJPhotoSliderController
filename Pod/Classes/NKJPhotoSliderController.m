@@ -86,6 +86,10 @@ const
         [self.view addSubview:self.closeButton];
     }
 
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -142,7 +146,7 @@ const
         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
-                             [self dismissViewControllerAnimated:YES completion:nil];
+                             [self dissmissViewController];
                          } completion:nil];
         return;
     } else if (scrollView.contentOffset.y < -100) {
@@ -150,7 +154,7 @@ const
         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
-                             [self dismissViewControllerAnimated:YES completion:nil];
+                             [self dissmissViewController];
                          } completion:nil];
         return;
     }
@@ -180,10 +184,17 @@ const
 
 - (void)closeButtonDidTap:(UIButton *)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dissmissViewController];
 }
 
 #pragma mark - Private Methods
+
+- (void)dissmissViewController
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate photoSliderControllerDidDismiss:self];
+    }];
+}
 
 - (NSBundle *)resourceBundle
 {
