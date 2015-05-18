@@ -10,11 +10,19 @@
 #import "NKJPhotoSliderController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
-@interface NKJViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface NKJViewController ()
+<
+    UITableViewDelegate,
+    UITableViewDataSource,
+    UICollectionViewDelegate,
+    UICollectionViewDataSource,
+    UICollectionViewDelegateFlowLayout,
+    NKJPhotoSliderControllerDelegate
+>
 
 @property IBOutlet UITableView *tableView;
 @property NSArray *images;
-
+@property BOOL statusBarHidden;
 @end
 
 @implementation NKJViewController
@@ -33,9 +41,14 @@
                     @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image007.jpg",
                     @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image008.jpg"
                     ];
-    
+
+    self.statusBarHidden = NO;
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return self.statusBarHidden;
+}
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -88,8 +101,20 @@
     NKJPhotoSliderController *slider = [[NKJPhotoSliderController alloc] initWithImageURLs:self.images];
     slider.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     slider.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    slider.delegate = self;
     slider.index = indexPath.row;
+    
+    self.statusBarHidden = YES;
     [self presentViewController:slider animated:YES completion:nil];
+}
+
+
+#pragma mark - NKJPhotoSliderControllerDelegate
+
+- (void)photoSliderControllerDidDismiss:(NKJPhotoSliderController *)viewController
+{
+    self.statusBarHidden = NO;
+    [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
 }
 
 @end
