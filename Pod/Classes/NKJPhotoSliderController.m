@@ -140,21 +140,27 @@ const
     CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
     CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
     
-    if (scrollView.contentOffset.y > 100) {
+    if (scrollView.contentOffset.y > 70) {
         self.collectionView.frame = scrollView.frame;
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
+                             self.collectionView.alpha = 0.f;
+
+                         } completion:^(BOOL finished) {
                              [self dissmissViewController];
-                         } completion:nil];
+                         }];
         return;
-    } else if (scrollView.contentOffset.y < -100) {
+    } else if (scrollView.contentOffset.y < -50) {
         self.collectionView.frame = scrollView.frame;
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
+                             self.collectionView.alpha = 0.f;
+
+                         } completion:^(BOOL finished) {
                              [self dissmissViewController];
-                         } completion:nil];
+                         }];
         return;
     }
     
