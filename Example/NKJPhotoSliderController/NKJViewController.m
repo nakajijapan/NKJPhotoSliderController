@@ -47,6 +47,7 @@
 
 - (BOOL)prefersStatusBarHidden
 {
+    [[UIApplication sharedApplication] setStatusBarHidden:self.statusBarHidden];
     return self.statusBarHidden;
 }
 
@@ -105,6 +106,7 @@
     slider.index = indexPath.row;
     
     self.statusBarHidden = YES;
+    [self prefersStatusBarHidden];
     [self presentViewController:slider animated:YES completion:nil];
 }
 
@@ -114,6 +116,7 @@
 - (void)photoSliderControllerDidDismiss:(NKJPhotoSliderController *)viewController
 {
     self.statusBarHidden = NO;
+    [self prefersStatusBarHidden];
     [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
 }
 
