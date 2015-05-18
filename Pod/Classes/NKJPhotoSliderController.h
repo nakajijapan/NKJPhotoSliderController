@@ -13,6 +13,7 @@
 @property (nonatomic) NSInteger index;
 @property (nonatomic) UIPageControl *pageControl;
 @property (nonatomic) BOOL visiblePageControl;
+@property (nonatomic) BOOL visibleCloseButton;
 
 - (id)initWithImageURLs:(NSArray *)imageURLs;
 
