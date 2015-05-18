@@ -26,6 +26,8 @@ const
     self = [super init];
     if (self) {
         self.imageURLs = imageURLs;
+        self.visiblePageControl = YES;
+        self.visibleCloseButton = YES;
     }
     
     return self;
@@ -38,10 +40,7 @@ const
     self.view.frame = [UIScreen mainScreen].bounds;
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
-    
-    self.visiblePageControl = YES;
-    self.visibleCloseButton = YES;
-    
+   
     UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     backgroundView.backgroundColor = [UIColor blackColor];
     backgroundView.alpha = 0.7;
