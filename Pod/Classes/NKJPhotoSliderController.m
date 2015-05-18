@@ -14,6 +14,7 @@
 @property (nonatomic) UICollectionView *collectionView;
 @property (nonatomic) NSArray *imageURLs;
 @property (nonatomic) CGPoint scrollPreviewPoint;
+@property (nonatomic) UIButton *closeButton;
 @end
 
 @implementation NKJPhotoSliderController
@@ -28,7 +29,6 @@
     return self;
 }
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -38,6 +38,7 @@
     self.view.userInteractionEnabled = YES;
     
     self.visiblePageControl = YES;
+    self.visibleCloseButton = YES;
     
     UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     backgroundView.backgroundColor = [UIColor blackColor];
@@ -70,6 +71,18 @@
         self.pageControl.currentPage = 0;
         self.pageControl.userInteractionEnabled = false;
         [self.view addSubview:self.pageControl];
+    }
+    
+    if (self.visibleCloseButton) {
+        self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 32 - 16, 16, 32, 32)];
+        
+        NSString *imagePath = [[self resourceBundle] pathForResource:@"NKJPhotoSliderControllerClose"
+                                                              ofType:@"png"];
+        
+        [self.closeButton setImage:[UIImage imageWithContentsOfFile:imagePath] forState:UIControlStateNormal];
+        [self.closeButton addTarget:self action:@selector(closeButtonDidTap:) forControlEvents:UIControlEventTouchUpInside];
+        self.closeButton.imageView.contentMode = UIViewContentModeCenter;
+        [self.view addSubview:self.closeButton];
     }
 
 }
@@ -160,6 +173,24 @@
         }
     }
 
+}
+
+#pragma mark - Button Actions
+
+- (void)closeButtonDidTap:(UIButton *)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Private Methods
+
+- (NSBundle *)resourceBundle
+{
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"NKJPhotoSliderController"
+                                                           ofType:@"bundle"];
+    NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
+    
+    return bundle;
 }
 
 @end
