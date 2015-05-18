@@ -9,6 +9,8 @@
 #import "NKJPhotoSliderController.h"
 #import "NKJPhotoSliderCollectionViewCell.h"
 
+const
+
 @interface NKJPhotoSliderController()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic) UICollectionView *collectionView;
@@ -74,7 +76,7 @@
     }
     
     if (self.visibleCloseButton) {
-        self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 32 - 16, 16, 32, 32)];
+        self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 32 - 8, 8, 32, 32)];
         
         NSString *imagePath = [[self resourceBundle] pathForResource:@"NKJPhotoSliderControllerClose"
                                                               ofType:@"png"];
