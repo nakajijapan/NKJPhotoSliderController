@@ -17,6 +17,7 @@ const
 @property (nonatomic) NSArray *imageURLs;
 @property (nonatomic) CGPoint scrollPreviewPoint;
 @property (nonatomic) UIButton *closeButton;
+@property (nonatomic) UIView *backgroundView;
 @end
 
 @implementation NKJPhotoSliderController
@@ -41,9 +42,9 @@ const
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
    
-    UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
-    backgroundView.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:backgroundView];
+    self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
+    self.backgroundView.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:self.backgroundView];
     
     // layout
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
@@ -140,12 +141,15 @@ const
     CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
     CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
     
+    self.backgroundView.alpha = 1.f -  fabs(scrollView.contentOffset.y) / (screenHeight / 1.5);
+    
     if (scrollView.contentOffset.y > 70) {
         self.collectionView.frame = scrollView.frame;
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
                              self.collectionView.alpha = 0.f;
+                             self.closeButton.alpha = 0.f;
 
                          } completion:^(BOOL finished) {
                              [self dissmissViewController];

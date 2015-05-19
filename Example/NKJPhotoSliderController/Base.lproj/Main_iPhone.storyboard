@@ -83,7 +83,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tLR-sA-8oe"/>
-                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="tableView" destination="jUd-ih-uZ8" id="FPr-tF-ILY"/>
                     </connections>
