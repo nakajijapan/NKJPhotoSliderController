@@ -142,6 +142,11 @@ const
     
     if (scrollView.contentOffset.y > 100) {
         self.collectionView.frame = scrollView.frame;
+        
+        if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+            [self.delegate photoSliderControllerWillDismiss:self];
+        }
+        
         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
@@ -150,6 +155,11 @@ const
         return;
     } else if (scrollView.contentOffset.y < -100) {
         self.collectionView.frame = scrollView.frame;
+        
+        if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+            [self.delegate photoSliderControllerWillDismiss:self];
+        }
+
         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
@@ -183,6 +193,10 @@ const
 
 - (void)closeButtonDidTap:(UIButton *)sender
 {
+    if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+        [self.delegate photoSliderControllerWillDismiss:self];
+    }
+    
     [self dissmissViewController];
 }
 
@@ -191,7 +205,11 @@ const
 - (void)dissmissViewController
 {
     [self dismissViewControllerAnimated:YES completion:^{
-        [self.delegate photoSliderControllerDidDismiss:self];
+        
+        if ([self respondsToSelector:@selector(photoSliderControllerDidDismiss:)]) {
+            [self.delegate photoSliderControllerDidDismiss:self];
+        }
+
     }];
 }
 

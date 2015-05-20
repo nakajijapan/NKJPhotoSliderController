@@ -11,6 +11,9 @@
 @class NKJPhotoSliderController;
 
 @protocol NKJPhotoSliderControllerDelegate <NSObject>
+
+@optional
+- (void)photoSliderControllerWillDismiss:(NKJPhotoSliderController *)viewController;
 - (void)photoSliderControllerDidDismiss:(NKJPhotoSliderController *)viewController;
 @end
 
