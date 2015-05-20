@@ -22,7 +22,6 @@
 
 @property IBOutlet UITableView *tableView;
 @property NSArray *images;
-@property BOOL statusBarHidden;
 @end
 
 @implementation NKJViewController
@@ -42,12 +41,11 @@
                     @"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image008.jpg"
                     ];
 
-    self.statusBarHidden = NO;
 }
 
 - (BOOL)prefersStatusBarHidden
 {
-    return self.statusBarHidden;
+    return NO;
 }
 
 #pragma mark - UITableViewDataSource
@@ -104,17 +102,16 @@
     slider.delegate = self;
     slider.index = indexPath.row;
     
-    self.statusBarHidden = YES;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     [self presentViewController:slider animated:YES completion:nil];
 }
 
 
 #pragma mark - NKJPhotoSliderControllerDelegate
 
-- (void)photoSliderControllerDidDismiss:(NKJPhotoSliderController *)viewController
+- (void)photoSliderControllerWillDismiss:(NKJPhotoSliderController *)viewController
 {
-    self.statusBarHidden = NO;
-    [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 }
 
 @end
