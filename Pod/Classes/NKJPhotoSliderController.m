@@ -9,8 +9,6 @@
 #import "NKJPhotoSliderController.h"
 #import "NKJPhotoSliderCollectionViewCell.h"
 
-const
-
 @interface NKJPhotoSliderController()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic) UICollectionView *collectionView;
@@ -137,37 +135,6 @@ const
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
-    CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
-    
-    if (scrollView.contentOffset.y > 100) {
-        self.collectionView.frame = scrollView.frame;
-        
-        if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
-            [self.delegate photoSliderControllerWillDismiss:self];
-        }
-        
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-                             self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
-                             [self dissmissViewController];
-                         } completion:nil];
-        return;
-    } else if (scrollView.contentOffset.y < -100) {
-        self.collectionView.frame = scrollView.frame;
-        
-        if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
-            [self.delegate photoSliderControllerWillDismiss:self];
-        }
-
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-                             self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
-                             [self dissmissViewController];
-                         } completion:nil];
-        return;
-    }
-    
     CGFloat offsetX = fabs(scrollView.contentOffset.x - self.scrollPreviewPoint.x);
     CGFloat offsetY = fabs(scrollView.contentOffset.y - self.scrollPreviewPoint.y);
     
@@ -187,6 +154,43 @@ const
         }
     }
 
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
+    CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
+    
+    CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:scrollView];
+    
+    if (velocity.y < -500) {
+        self.collectionView.frame = scrollView.frame;
+        
+        if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+            [self.delegate photoSliderControllerWillDismiss:self];
+        }
+        
+        [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationCurveEaseIn
+                         animations:^{
+                             self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
+                         } completion:^(BOOL finished) {
+                             [self dissmissViewController];
+                         }];
+    } else if (velocity.y > 500) {
+        self.collectionView.frame = scrollView.frame;
+        
+        if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+            [self.delegate photoSliderControllerWillDismiss:self];
+        }
+        
+        [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationCurveEaseIn
+                         animations:^{
+                             self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
+                         } completion:^(BOOL finished) {
+                             [self dissmissViewController];
+                         }];
+    }
+    
 }
 
 #pragma mark - Button Actions
