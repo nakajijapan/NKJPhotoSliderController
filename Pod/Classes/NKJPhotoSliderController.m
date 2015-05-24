@@ -39,10 +39,20 @@
     self.view.frame = [UIScreen mainScreen].bounds;
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
-   
+
     self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.backgroundView.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:self.backgroundView];
+
+    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
+        [self.view addSubview:self.backgroundView];
+    } else {
+        UIBlurEffect * blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        effectView.frame = self.view.bounds;
+        [self.view addSubview:effectView];
+        
+        [effectView addSubview:self.backgroundView];
+    }
     
     // layout
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
@@ -140,7 +150,7 @@
     CGFloat offsetY = fabs(scrollView.contentOffset.y - self.scrollPreviewPoint.y);
     
     if (offsetY > offsetX) {
-        CGFloat alpha = 1.0 - (fabs(scrollView.contentOffset.y) / (scrollView.frame.size.height / 2));
+        CGFloat alpha = 1.0 - (fabs(scrollView.contentOffset.y * 2.f) / (scrollView.frame.size.height / 2));
         self.backgroundView.alpha = alpha;
         
         CGPoint contentOffset = scrollView.contentOffset;
