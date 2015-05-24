@@ -15,6 +15,7 @@
 @property (nonatomic) NSArray *imageURLs;
 @property (nonatomic) CGPoint scrollPreviewPoint;
 @property (nonatomic) UIButton *closeButton;
+@property (nonatomic) UIView *backgroundView;
 @end
 
 @implementation NKJPhotoSliderController
@@ -39,9 +40,9 @@
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
    
-    UIView *backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
-    backgroundView.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:backgroundView];
+    self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
+    self.backgroundView.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:self.backgroundView];
     
     // layout
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
@@ -139,10 +140,14 @@
     CGFloat offsetY = fabs(scrollView.contentOffset.y - self.scrollPreviewPoint.y);
     
     if (offsetY > offsetX) {
+        CGFloat alpha = 1.0 - (fabs(scrollView.contentOffset.y) / (scrollView.frame.size.height / 2));
+        self.backgroundView.alpha = alpha;
+        
         CGPoint contentOffset = scrollView.contentOffset;
         contentOffset.x = self.scrollPreviewPoint.x;
         scrollView.contentOffset = contentOffset;
     } else {
+        
         CGPoint contentOffset = scrollView.contentOffset;
         contentOffset.y = self.scrollPreviewPoint.y;
         scrollView.contentOffset = contentOffset;
@@ -170,11 +175,14 @@
             [self.delegate photoSliderControllerWillDismiss:self];
         }
         
-        [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationOptionCurveEaseIn
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
-                         } completion:^(BOOL finished) {
-                             [self dissmissViewController];
+                             self.backgroundView.alpha = 0.f;
+                             self.view.alpha = 0.f;
+                         }
+                         completion:^(BOOL finished) {
+                             [self dissmissViewControllerAnimated:NO];
                          }];
     } else if (velocity.y > 500) {
         self.collectionView.frame = scrollView.frame;
@@ -183,11 +191,14 @@
             [self.delegate photoSliderControllerWillDismiss:self];
         }
         
-        [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationOptionCurveEaseIn
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
-                         } completion:^(BOOL finished) {
-                             [self dissmissViewController];
+                             self.backgroundView.alpha = 0.f;
+                             self.view.alpha = 0.f;
+                         }
+                         completion:^(BOOL finished) {
+                             [self dissmissViewControllerAnimated:NO];
                          }];
     }
     
@@ -201,14 +212,14 @@
         [self.delegate photoSliderControllerWillDismiss:self];
     }
     
-    [self dissmissViewController];
+    [self dissmissViewControllerAnimated:YES];
 }
 
 #pragma mark - Private Methods
 
-- (void)dissmissViewController
+- (void)dissmissViewControllerAnimated:(BOOL)animated
 {
-    [self dismissViewControllerAnimated:YES completion:^{
+    [self dismissViewControllerAnimated:animated completion:^{
         
         if ([self respondsToSelector:@selector(photoSliderControllerDidDismiss:)]) {
             [self.delegate photoSliderControllerDidDismiss:self];
