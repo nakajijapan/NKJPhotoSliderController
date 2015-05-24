@@ -170,7 +170,7 @@
             [self.delegate photoSliderControllerWillDismiss:self];
         }
         
-        [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationCurveEaseIn
+        [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
                          } completion:^(BOOL finished) {
@@ -183,7 +183,7 @@
             [self.delegate photoSliderControllerWillDismiss:self];
         }
         
-        [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationCurveEaseIn
+        [UIView animateWithDuration:0.35 delay:0 options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
                          } completion:^(BOOL finished) {
