@@ -9,6 +9,12 @@
 #import "NKJPhotoSliderController.h"
 #import "NKJPhotoSliderCollectionViewCell.h"
 
+typedef enum : NSUInteger {
+    NKJPhotoSliderControllerScrollModeNone = 0,
+    NKJPhotoSliderControllerScrollModeVertical,
+    NKJPhotoSliderControllerScrollModeHorizontal,
+} NKJPhotoSliderControllerScrollMode;
+
 @interface NKJPhotoSliderController()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic) UICollectionView *collectionView;
@@ -16,6 +22,7 @@
 @property (nonatomic) CGPoint scrollPreviewPoint;
 @property (nonatomic) UIButton *closeButton;
 @property (nonatomic) UIView *backgroundView;
+@property (nonatomic) NKJPhotoSliderControllerScrollMode scrollMode;
 @end
 
 @implementation NKJPhotoSliderController
@@ -97,7 +104,9 @@
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
     }
-
+    
+    self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -148,20 +157,28 @@
 {
     CGFloat offsetX = fabs(scrollView.contentOffset.x - self.scrollPreviewPoint.x);
     CGFloat offsetY = fabs(scrollView.contentOffset.y - self.scrollPreviewPoint.y);
+
+    if (self.scrollMode == NKJPhotoSliderControllerScrollModeNone) {
+        if (offsetY > offsetX) {
+            self.scrollMode = NKJPhotoSliderControllerScrollModeVertical;
+        } else {
+            self.scrollMode = NKJPhotoSliderControllerScrollModeHorizontal;
+        }
+    }
     
-    if (offsetY > offsetX) {
+    if (self.scrollMode == NKJPhotoSliderControllerScrollModeVertical) {
         CGFloat alpha = 1.0 - (fabs(scrollView.contentOffset.y * 2.f) / (scrollView.frame.size.height / 2));
         self.backgroundView.alpha = alpha;
         
         CGPoint contentOffset = scrollView.contentOffset;
         contentOffset.x = self.scrollPreviewPoint.x;
         scrollView.contentOffset = contentOffset;
-    } else {
-        
+    } else if (self.scrollMode == NKJPhotoSliderControllerScrollModeHorizontal) {
         CGPoint contentOffset = scrollView.contentOffset;
         contentOffset.y = self.scrollPreviewPoint.y;
         scrollView.contentOffset = contentOffset;
     }
+
     
     if (self.visiblePageControl) {
         if (fmod(scrollView.contentOffset.x, scrollView.frame.size.width) == 0.0) {
@@ -173,45 +190,52 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
-    CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
-    
-    CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:scrollView];
-    
-    if (velocity.y < -500) {
-        self.collectionView.frame = scrollView.frame;
+    if (self.scrollMode == NKJPhotoSliderControllerScrollModeVertical) {
+
+        CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
+        CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
         
-        if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
-            [self.delegate photoSliderControllerWillDismiss:self];
+        CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:scrollView];
+
+        if (velocity.y < -500) {
+            self.collectionView.frame = scrollView.frame;
+            
+            if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+                [self.delegate photoSliderControllerWillDismiss:self];
+            }
+            
+            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn
+                             animations:^{
+                                 self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
+                                 self.backgroundView.alpha = 0.f;
+                                 self.view.alpha = 0.f;
+                             }
+                             completion:^(BOOL finished) {
+                                 [self dissmissViewControllerAnimated:NO];
+                             }];
+        } else if (velocity.y > 500) {
+            self.collectionView.frame = scrollView.frame;
+            
+            if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+                [self.delegate photoSliderControllerWillDismiss:self];
+            }
+            
+            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn
+                             animations:^{
+                                 self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
+                                 self.backgroundView.alpha = 0.f;
+                                 self.view.alpha = 0.f;
+                             }
+                             completion:^(BOOL finished) {
+                                 [self dissmissViewControllerAnimated:NO];
+                             }];
         }
-        
-        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn
-                         animations:^{
-                             self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
-                             self.backgroundView.alpha = 0.f;
-                             self.view.alpha = 0.f;
-                         }
-                         completion:^(BOOL finished) {
-                             [self dissmissViewControllerAnimated:NO];
-                         }];
-    } else if (velocity.y > 500) {
-        self.collectionView.frame = scrollView.frame;
-        
-        if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
-            [self.delegate photoSliderControllerWillDismiss:self];
-        }
-        
-        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn
-                         animations:^{
-                             self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
-                             self.backgroundView.alpha = 0.f;
-                             self.view.alpha = 0.f;
-                         }
-                         completion:^(BOOL finished) {
-                             [self dissmissViewControllerAnimated:NO];
-                         }];
     }
-    
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
 }
 
 #pragma mark - Button Actions
