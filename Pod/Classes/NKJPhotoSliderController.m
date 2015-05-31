@@ -197,14 +197,14 @@ typedef enum : NSUInteger {
         
         CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:scrollView];
 
-        if (velocity.y < -500) {
+        if (velocity.y < -500.f) {
             self.collectionView.frame = scrollView.frame;
             
             if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
                 [self.delegate photoSliderControllerWillDismiss:self];
             }
             
-            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn
+            [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseIn
                              animations:^{
                                  self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
                                  self.backgroundView.alpha = 0.f;
@@ -213,14 +213,14 @@ typedef enum : NSUInteger {
                              completion:^(BOOL finished) {
                                  [self dissmissViewControllerAnimated:NO];
                              }];
-        } else if (velocity.y > 500) {
+        } else if (velocity.y > 500.f) {
             self.collectionView.frame = scrollView.frame;
             
             if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
                 [self.delegate photoSliderControllerWillDismiss:self];
             }
             
-            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn
+            [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseIn
                              animations:^{
                                  self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
                                  self.backgroundView.alpha = 0.f;
