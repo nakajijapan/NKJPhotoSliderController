@@ -6,6 +6,5 @@ end
 
 target 'Tests', :exclusive => true do
   pod "NKJPhotoSliderController", :path => "../"
-
-  pod 'FBSnapshotTestCase'
+  pod 'KIF', '~> 3.0', :configurations => ['Debug']
 end
