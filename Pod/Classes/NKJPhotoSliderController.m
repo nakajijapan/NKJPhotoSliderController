@@ -134,7 +134,7 @@ typedef enum : NSUInteger {
     NKJPhotoSliderCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
 
     if (self.imageURLs > 0) {
-        NSURL *imageURL = [NSURL URLWithString:self.imageURLs[indexPath.row]];
+        NSURL *imageURL = self.imageURLs[indexPath.row];
         [cell loadImageWithURL:imageURL];
     }
     
