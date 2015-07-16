@@ -26,5 +26,5 @@
 @property (nonatomic) id<NKJPhotoSliderControllerDelegate> delegate;
 
 - (id)initWithImageURLs:(NSArray *)imageURLs;
-
+- (id)initWithImages:(NSArray *)images;
 @end
