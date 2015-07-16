@@ -139,7 +139,7 @@ typedef enum : NSUInteger {
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.imageURLs.count || self.images.count;
+    return self.imageURLs.count > 0 ? self.imageURLs.count : self.images.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
