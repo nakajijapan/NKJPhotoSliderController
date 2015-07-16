@@ -19,6 +19,7 @@ typedef enum : NSUInteger {
 
 @property (nonatomic) UICollectionView *collectionView;
 @property (nonatomic) NSArray *imageURLs;
+@property (nonatomic) NSArray *images;
 @property (nonatomic) CGPoint scrollPreviewPoint;
 @property (nonatomic) UIButton *closeButton;
 @property (nonatomic) UIView *backgroundView;
@@ -36,6 +37,18 @@ typedef enum : NSUInteger {
         self.visibleCloseButton = YES;
     }
     
+    return self;
+}
+
+- (id)initWithImages:(NSArray *)images;
+{
+    self = [super init];
+    if (self) {
+        self.images = images;
+        self.visiblePageControl = YES;
+        self.visibleCloseButton = YES;
+    }
+
     return self;
 }
 
@@ -126,7 +139,7 @@ typedef enum : NSUInteger {
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.imageURLs.count;
+    return self.imageURLs.count || self.images.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -136,6 +149,8 @@ typedef enum : NSUInteger {
     if (self.imageURLs > 0) {
         NSURL *imageURL = self.imageURLs[indexPath.row];
         [cell loadImageWithURL:imageURL];
+    } else if (self.images.count > 0) {
+        cell.imageView.imageView.image = self.images[indexPath.row];
     }
     
     return cell;
