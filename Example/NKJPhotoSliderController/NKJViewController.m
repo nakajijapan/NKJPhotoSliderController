@@ -97,14 +97,14 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NKJPhotoSliderController *slider = [[NKJPhotoSliderController alloc] initWithImageURLs:self.images];
-    slider.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    slider.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    slider.delegate = self;
-    slider.index = indexPath.row;
+    NKJPhotoSliderController *photoSlider = [[NKJPhotoSliderController alloc] initWithImageURLs:self.images];
+    photoSlider.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    photoSlider.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    photoSlider.delegate = self;
+    photoSlider.index = indexPath.row;
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-    [self presentViewController:slider animated:YES completion:nil];
+    [self presentViewController:photoSlider animated:YES completion:nil];
 }
 
 
