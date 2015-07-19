@@ -80,12 +80,6 @@ typedef enum : NSUInteger {
         [effectView addSubview:self.backgroundView];
     }
     
-    // layout
-    UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.minimumInteritemSpacing = 0;
-    layout.minimumLineSpacing = 0;
-    
     // scrollview setting for Item
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.f, 0.f, self.view.bounds.size.width, self.view.bounds.size.height)];
     self.scrollView.pagingEnabled = YES;
