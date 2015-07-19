@@ -7,7 +7,7 @@
 //
 
 #import "NKJPhotoSliderController.h"
-#import "NKJPhotoSliderCollectionViewCell.h"
+#import "NKJPhotoSliderImageView.h"
 
 typedef enum : NSUInteger {
     NKJPhotoSliderControllerScrollModeNone = 0,
@@ -15,15 +15,17 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerScrollModeHorizontal,
 } NKJPhotoSliderControllerScrollMode;
 
-@interface NKJPhotoSliderController()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface NKJPhotoSliderController()<UIScrollViewDelegate>
 
-@property (nonatomic) UICollectionView *collectionView;
+@property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
 @property (nonatomic) NSArray *images;
 @property (nonatomic) CGPoint scrollPreviewPoint;
 @property (nonatomic) UIButton *closeButton;
 @property (nonatomic) UIView *backgroundView;
 @property (nonatomic) NKJPhotoSliderControllerScrollMode scrollMode;
+@property (nonatomic) BOOL scrollInitalized;
+@property (nonatomic) BOOL closeAnimating;
 @end
 
 @implementation NKJPhotoSliderController
@@ -35,6 +37,8 @@ typedef enum : NSUInteger {
         self.imageURLs = imageURLs;
         self.visiblePageControl = YES;
         self.visibleCloseButton = YES;
+        self.scrollInitalized = NO;
+        self.closeAnimating = NO;
     }
     
     return self;
@@ -47,6 +51,8 @@ typedef enum : NSUInteger {
         self.images = images;
         self.visiblePageControl = YES;
         self.visibleCloseButton = YES;
+        self.scrollInitalized = NO;
+        self.closeAnimating = NO;
     }
 
     return self;
@@ -74,29 +80,46 @@ typedef enum : NSUInteger {
         [effectView addSubview:self.backgroundView];
     }
     
-    // layout
-    UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.minimumInteritemSpacing = 0;
-    layout.minimumLineSpacing = 0;
+    // scrollview setting for Item
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.f, 0.f, self.view.bounds.size.width, self.view.bounds.size.height)];
+    self.scrollView.pagingEnabled = YES;
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.showsVerticalScrollIndicator = NO;
+    self.scrollView.delegate = self;
+    self.scrollView.clipsToBounds = false;
+    self.scrollView.alwaysBounceHorizontal = YES;
+    self.scrollView.alwaysBounceVertical = YES;
+    self.scrollView.scrollEnabled = YES;
+    [self.view addSubview:self.scrollView];
+
+    self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds) * self.imageURLs.count,
+                                             CGRectGetHeight(self.view.bounds) * 3.f);
     
-    // collectionView
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
-                                             collectionViewLayout:layout];
-    [self.collectionView registerClass:[NKJPhotoSliderCollectionViewCell class]
-            forCellWithReuseIdentifier:@"cell"];
-    self.collectionView.pagingEnabled = YES;
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    self.collectionView.bounces = YES;
-    self.collectionView.backgroundColor = [UIColor clearColor];
-    self.collectionView.showsHorizontalScrollIndicator = YES;
-    self.collectionView.alwaysBounceVertical = YES;
-    [self.view addSubview:self.collectionView];
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    CGFloat height = CGRectGetHeight(self.view.bounds);
+    CGRect frame = self.view.bounds;
+    frame.origin.y = height;
     
+    if (self.imageURLs.count > 0) {
+        for (NSURL *imageURL in self.imageURLs) {
+            NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
+            [self.scrollView addSubview:imageView];
+            [imageView loadImage:imageURL];
+            frame.origin.x += width;
+        }
+    } else {
+        for (UIImage *image in self.images) {
+            NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
+            [self.scrollView addSubview:imageView];
+            imageView.imageView.image = image;
+            frame.origin.x += width;
+        }
+    }
+    
+    // pagecontrol
     if (self.visiblePageControl) {
-        self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0.0, CGRectGetHeight(self.view.frame) - 44, CGRectGetWidth(self.view.frame), 22)];
-        self.pageControl.numberOfPages = self.imageURLs.count;
+        self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0.f, CGRectGetHeight(self.view.bounds) - 44.f, CGRectGetWidth(self.view.bounds), 22.f)];
+        self.pageControl.numberOfPages = self.imageURLs.count > 0 ? self.imageURLs.count : self.images.count;
         self.pageControl.currentPage = 0;
         self.pageControl.userInteractionEnabled = false;
         [self.view addSubview:self.pageControl];
@@ -124,41 +147,8 @@ typedef enum : NSUInteger {
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:self.index inSection:0];
-    [self.collectionView scrollToItemAtIndexPath:indexPath
-                                atScrollPosition:UICollectionViewScrollPositionNone
-                                        animated:NO];
-}
-
-#pragma mark - UICollectionViewDataSource
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return self.imageURLs.count > 0 ? self.imageURLs.count : self.images.count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    NKJPhotoSliderCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-
-    if (self.imageURLs > 0) {
-        NSURL *imageURL = self.imageURLs[indexPath.row];
-        [cell loadImageWithURL:imageURL];
-    } else if (self.images.count > 0) {
-        cell.imageView.imageView.image = self.images[indexPath.row];
-    }
-    
-    return cell;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return self.view.bounds.size;
+    self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * self.index, CGRectGetHeight(self.scrollView.bounds));
+    self.scrollInitalized = YES;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -170,6 +160,11 @@ typedef enum : NSUInteger {
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if (!self.scrollInitalized) {
+        [self generateCurrentPage];
+        return;
+    }
+    
     CGFloat offsetX = fabs(scrollView.contentOffset.x - self.scrollPreviewPoint.x);
     CGFloat offsetY = fabs(scrollView.contentOffset.y - self.scrollPreviewPoint.y);
 
@@ -182,70 +177,95 @@ typedef enum : NSUInteger {
     }
     
     if (self.scrollMode == NKJPhotoSliderControllerScrollModeVertical) {
-        CGFloat alpha = 1.0 - (fabs(scrollView.contentOffset.y * 2.f) / (scrollView.frame.size.height / 2));
+
+        CGFloat offsetHeight = fabs(scrollView.frame.size.height - scrollView.contentOffset.y);
+        CGFloat alpha = 1.f - (fabs(offsetHeight) / (scrollView.frame.size.height / 2.f));
+        
         self.backgroundView.alpha = alpha;
         
         CGPoint contentOffset = scrollView.contentOffset;
         contentOffset.x = self.scrollPreviewPoint.x;
         scrollView.contentOffset = contentOffset;
+        
+        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+        if (self.scrollView.contentOffset.y > screenHeight * 1.4) {
+            [self closePhotoSliderWithUp:true];
+        } else if (self.scrollView.contentOffset.y < screenHeight * 0.6) {
+            [self closePhotoSliderWithUp:false];
+        }
+        
     } else if (self.scrollMode == NKJPhotoSliderControllerScrollModeHorizontal) {
         CGPoint contentOffset = scrollView.contentOffset;
         contentOffset.y = self.scrollPreviewPoint.y;
         scrollView.contentOffset = contentOffset;
     }
-
     
+    [self generateCurrentPage];
+
+}
+
+- (void)generateCurrentPage
+{
     if (self.visiblePageControl) {
-        if (fmod(scrollView.contentOffset.x, scrollView.frame.size.width) == 0.0) {
-            self.pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+        if (fmod(self.scrollView.contentOffset.x, self.scrollView.frame.size.width) == 0.0) {
+            if (self.pageControl != nil) {
+                self.pageControl.currentPage = (NSInteger)(self.scrollView.contentOffset.x / self.scrollView.frame.size.width);
+            }
         }
     }
-
+    
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (self.scrollMode == NKJPhotoSliderControllerScrollModeVertical) {
 
-        CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
-        CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
-        
         CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:scrollView];
 
         if (velocity.y < -500.f) {
-            self.collectionView.frame = scrollView.frame;
-            
-            if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
-                [self.delegate photoSliderControllerWillDismiss:self];
-            }
-            
-            [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseIn
-                             animations:^{
-                                 self.collectionView.frame = CGRectMake(0, -screenHeight, screenWidth, screenHeight);
-                                 self.backgroundView.alpha = 0.f;
-                                 self.view.alpha = 0.f;
-                             }
-                             completion:^(BOOL finished) {
-                                 [self dissmissViewControllerAnimated:NO];
-                             }];
+            self.scrollView.frame = scrollView.frame;
+            [self closePhotoSliderWithUp:YES];
         } else if (velocity.y > 500.f) {
-            self.collectionView.frame = scrollView.frame;
-            
-            if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
-                [self.delegate photoSliderControllerWillDismiss:self];
-            }
-            
-            [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseIn
-                             animations:^{
-                                 self.collectionView.frame = CGRectMake(0, screenHeight, screenWidth, screenHeight);
-                                 self.backgroundView.alpha = 0.f;
-                                 self.view.alpha = 0.f;
-                             }
-                             completion:^(BOOL finished) {
-                                 [self dissmissViewControllerAnimated:NO];
-                             }];
+            self.scrollView.frame = scrollView.frame;
+            [self closePhotoSliderWithUp:NO];
         }
     }
+}
+
+- (void)closePhotoSliderWithUp:(BOOL)up
+{
+    if (self.closeAnimating) {
+        return;
+    }
+    self.closeAnimating = YES;
+    
+    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat movedHeight = 0.f;
+    
+    if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+        [self.delegate photoSliderControllerWillDismiss:self];
+    }
+    
+    if (up) {
+        movedHeight = -screenHeight;
+    } else {
+        movedHeight = screenHeight;
+    }
+    
+    [UIView animateWithDuration:0.4
+                          delay:0.f
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         self.scrollView.frame = CGRectMake(0.f, movedHeight, screenWidth, screenHeight);
+                         self.backgroundView.alpha = 0.f;
+                         self.closeButton.alpha = 0.f;
+                         self.view.alpha = 0.f;
+                     }
+                     completion:^(BOOL finished) {
+                         [self dissmissViewControllerAnimated:NO];
+                         self.closeAnimating = NO;
+                     }];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -270,7 +290,7 @@ typedef enum : NSUInteger {
 {
     [self dismissViewControllerAnimated:animated completion:^{
         
-        if ([self respondsToSelector:@selector(photoSliderControllerDidDismiss:)]) {
+        if ([self.delegate respondsToSelector:@selector(photoSliderControllerDidDismiss:)]) {
             [self.delegate photoSliderControllerDidDismiss:self];
         }
 

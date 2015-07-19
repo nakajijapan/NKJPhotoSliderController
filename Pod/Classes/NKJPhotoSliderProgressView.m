@@ -75,6 +75,10 @@
 
 - (void)animateCurveToProgress:(float)progress
 {
+    if (!self.progressLayer) {
+        return;
+    }
+    
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     //animation.delegate = self;
     animation.fromValue = [NSNumber numberWithFloat:self.progressLayer.strokeEnd];

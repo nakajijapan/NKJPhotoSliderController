@@ -7,8 +7,11 @@
 //
 
 #import "NKJPhotoSliderImageView.h"
+#import "NKJPhotoSliderProgressView.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface NKJPhotoSliderImageView () <UIScrollViewDelegate>
+@property (nonatomic) NKJPhotoSliderProgressView *progressView;
 @end
 
 @implementation NKJPhotoSliderImageView
@@ -36,6 +39,10 @@
 
 - (void)initialize
 {
+    self.backgroundColor = [UIColor clearColor];
+    self.userInteractionEnabled = YES;
+    
+    // for zoom
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
     self.scrollView.showsHorizontalScrollIndicator = false;
     self.scrollView.showsVerticalScrollIndicator = false;
@@ -44,8 +51,7 @@
     self.scrollView.bounces = true;
     self.scrollView.delegate = self;
     
-    self.backgroundColor = [UIColor clearColor];
-    
+    // image
     self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.userInteractionEnabled = true;
@@ -54,9 +60,30 @@
     [self addSubview:self.scrollView];
     [self.scrollView addSubview:self.imageView];
     
+    // progress view
+    self.progressView = [[NKJPhotoSliderProgressView alloc] initWithFrame:CGRectMake(0.f, 0.f, 40.f, 40.f)];
+    self.progressView.center = CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0);
+    self.progressView.hidden = YES;
+    [self addSubview:self.progressView];
+    
     UITapGestureRecognizer *doubleTabGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didDoubleTap:)];
     doubleTabGesture.numberOfTapsRequired = 2;
     [self addGestureRecognizer:doubleTabGesture];
+}
+
+- (void)loadImage:(NSURL *)imageURL
+{
+    self.progressView.hidden = NO;
+    [self.imageView sd_setImageWithPreviousCachedImageWithURL:imageURL
+                                          andPlaceholderImage:nil
+                                                      options:SDWebImageCacheMemoryOnly
+                                                     progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                                         CGFloat progress = receivedSize / expectedSize;
+                                                         [self.progressView animateCurveToProgress:progress];
+                                                     }
+                                                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                                        self.progressView.hidden = YES;
+                                                    }];
 }
 
 - (void)didDoubleTap:(UIGestureRecognizer *)sender
