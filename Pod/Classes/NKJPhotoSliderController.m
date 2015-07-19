@@ -106,18 +106,26 @@ typedef enum : NSUInteger {
     CGRect frame = self.view.bounds;
     frame.origin.y = height;
     
-    for (NSURL *imageURL in self.imageURLs) {
-        NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
-        [self.scrollView addSubview:imageView];
-        [imageView loadImage:imageURL];
-        frame.origin.x += width;
+    if (self.imageURLs.count > 0) {
+        for (NSURL *imageURL in self.imageURLs) {
+            NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
+            [self.scrollView addSubview:imageView];
+            [imageView loadImage:imageURL];
+            frame.origin.x += width;
+        }
+    } else {
+        for (UIImage *image in self.images) {
+            NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
+            [self.scrollView addSubview:imageView];
+            imageView.imageView.image = image;
+            frame.origin.x += width;
+        }
     }
-    
     
     // pagecontrol
     if (self.visiblePageControl) {
         self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0.f, CGRectGetHeight(self.view.bounds) - 44.f, CGRectGetWidth(self.view.bounds), 22.f)];
-        self.pageControl.numberOfPages = self.imageURLs.count;
+        self.pageControl.numberOfPages = self.imageURLs.count > 0 ? self.imageURLs.count : self.images.count;
         self.pageControl.currentPage = 0;
         self.pageControl.userInteractionEnabled = false;
         [self.view addSubview:self.pageControl];
