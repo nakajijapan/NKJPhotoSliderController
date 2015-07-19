@@ -250,7 +250,7 @@ typedef enum : NSUInteger {
     CGFloat movedHeight = 0.f;
     
     if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
-        [self.delegate photoSliderControllerDidDismiss:self];
+        [self.delegate photoSliderControllerWillDismiss:self];
     }
     
     if (up) {
@@ -296,7 +296,7 @@ typedef enum : NSUInteger {
 {
     [self dismissViewControllerAnimated:animated completion:^{
         
-        if ([self respondsToSelector:@selector(photoSliderControllerDidDismiss:)]) {
+        if ([self.delegate respondsToSelector:@selector(photoSliderControllerDidDismiss:)]) {
             [self.delegate photoSliderControllerDidDismiss:self];
         }
 
