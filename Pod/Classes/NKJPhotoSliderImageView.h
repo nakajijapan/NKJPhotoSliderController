@@ -12,5 +12,6 @@
 
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) UIScrollView *scrollView;
+- (void)loadImage:(NSURL *)imageURL;
 
 @end
