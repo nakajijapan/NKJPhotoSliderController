@@ -35,10 +35,7 @@ typedef enum : NSUInteger {
     self = [super init];
     if (self) {
         self.imageURLs = imageURLs;
-        self.visiblePageControl = YES;
-        self.visibleCloseButton = YES;
-        self.scrollInitalized = NO;
-        self.closeAnimating = NO;
+        [self setup];
     }
     
     return self;
@@ -49,13 +46,18 @@ typedef enum : NSUInteger {
     self = [super init];
     if (self) {
         self.images = images;
-        self.visiblePageControl = YES;
-        self.visibleCloseButton = YES;
-        self.scrollInitalized = NO;
-        self.closeAnimating = NO;
+        [self setup];
     }
 
     return self;
+}
+
+- (void)setup {
+    self.visiblePageControl = YES;
+    self.visibleCloseButton = YES;
+    self.scrollInitalized = NO;
+    self.closeAnimating = NO;
+    self.backgroundColor = [UIColor blackColor];
 }
 
 - (void)viewDidLoad
@@ -67,7 +69,7 @@ typedef enum : NSUInteger {
     self.view.userInteractionEnabled = YES;
 
     self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
-    self.backgroundView.backgroundColor = [UIColor blackColor];
+    self.backgroundView.backgroundColor = self.backgroundColor;
 
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
         [self.view addSubview:self.backgroundView];

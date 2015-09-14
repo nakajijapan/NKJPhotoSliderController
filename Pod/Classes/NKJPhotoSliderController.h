@@ -21,6 +21,7 @@
 
 @property (nonatomic) NSInteger currentPage;
 @property (nonatomic) UIPageControl *pageControl;
+@property (nonatomic) UIColor *backgroundColor;
 @property (nonatomic) BOOL visiblePageControl;
 @property (nonatomic) BOOL visibleCloseButton;
 @property (nonatomic) id<NKJPhotoSliderControllerDelegate> delegate;
