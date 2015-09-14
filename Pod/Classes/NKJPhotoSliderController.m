@@ -206,14 +206,15 @@ typedef enum : NSUInteger {
 
 - (void)generateCurrentPage
 {
+
+    NSInteger currentPage = abs((int)roundf(self.scrollView.contentOffset.x / self.scrollView.frame.size.width));
+
     if (self.visiblePageControl) {
-        if (fmod(self.scrollView.contentOffset.x, self.scrollView.frame.size.width) == 0.0) {
-            if (self.pageControl != nil) {
-                self.pageControl.currentPage = (NSInteger)(self.scrollView.contentOffset.x / self.scrollView.frame.size.width);
-            }
+        if (self.pageControl != nil) {
+            self.pageControl.currentPage = currentPage;
         }
     }
-    
+
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
