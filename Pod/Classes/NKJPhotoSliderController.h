@@ -19,7 +19,7 @@
 
 @interface NKJPhotoSliderController : UIViewController
 
-@property (nonatomic) NSInteger index;
+@property (nonatomic) NSInteger currentPage;
 @property (nonatomic) UIPageControl *pageControl;
 @property (nonatomic) BOOL visiblePageControl;
 @property (nonatomic) BOOL visibleCloseButton;
