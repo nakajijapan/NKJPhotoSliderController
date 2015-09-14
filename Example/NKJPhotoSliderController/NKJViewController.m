@@ -101,7 +101,7 @@
     photoSlider.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     photoSlider.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     photoSlider.delegate = self;
-    photoSlider.index = indexPath.row;
+    photoSlider.currentPage = indexPath.row;
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     [self presentViewController:photoSlider animated:YES completion:nil];

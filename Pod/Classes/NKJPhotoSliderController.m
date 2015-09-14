@@ -147,7 +147,7 @@ typedef enum : NSUInteger {
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * self.index, CGRectGetHeight(self.scrollView.bounds));
+    self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * self.currentPage, CGRectGetHeight(self.scrollView.bounds));
     self.scrollInitalized = YES;
 }
 
@@ -207,11 +207,11 @@ typedef enum : NSUInteger {
 - (void)generateCurrentPage
 {
 
-    NSInteger currentPage = abs((int)roundf(self.scrollView.contentOffset.x / self.scrollView.frame.size.width));
+    self.currentPage = abs((int)roundf(self.scrollView.contentOffset.x / self.scrollView.frame.size.width));
 
     if (self.visiblePageControl) {
         if (self.pageControl != nil) {
-            self.pageControl.currentPage = currentPage;
+            self.pageControl.currentPage = self.currentPage;
         }
     }
 
