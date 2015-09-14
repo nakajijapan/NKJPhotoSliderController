@@ -35,11 +35,7 @@ typedef enum : NSUInteger {
     self = [super init];
     if (self) {
         self.imageURLs = imageURLs;
-        self.visiblePageControl = YES;
-        self.visibleCloseButton = YES;
-        self.scrollInitalized = NO;
-        self.closeAnimating = NO;
-        self.backgroundColor = [UIColor blackColor];
+        [self setup];
     }
     
     return self;
@@ -50,14 +46,18 @@ typedef enum : NSUInteger {
     self = [super init];
     if (self) {
         self.images = images;
-        self.visiblePageControl = YES;
-        self.visibleCloseButton = YES;
-        self.scrollInitalized = NO;
-        self.closeAnimating = NO;
-        self.backgroundColor = [UIColor blackColor];
+        [self setup];
     }
 
     return self;
+}
+
+- (void)setup {
+    self.visiblePageControl = YES;
+    self.visibleCloseButton = YES;
+    self.scrollInitalized = NO;
+    self.closeAnimating = NO;
+    self.backgroundColor = [UIColor blackColor];
 }
 
 - (void)viewDidLoad
