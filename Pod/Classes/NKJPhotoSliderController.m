@@ -123,15 +123,17 @@ typedef enum : NSUInteger {
     
     // Page Control
     if (self.visiblePageControl) {
-        self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0.f, CGRectGetHeight(self.view.bounds) - 44.f, CGRectGetWidth(self.view.bounds), 22.f)];
+        self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
         self.pageControl.numberOfPages = self.imageURLs.count > 0 ? self.imageURLs.count : self.images.count;
         self.pageControl.currentPage = 0;
         self.pageControl.userInteractionEnabled = false;
         [self.view addSubview:self.pageControl];
+        [self layoutPageControl];
     }
     
+    // Close Button
     if (self.visibleCloseButton) {
-        self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 32 - 8, 8, 32, 32)];
+        self.closeButton = [[UIButton alloc] initWithFrame:CGRectZero];
         
         NSString *imagePath = [[self resourceBundle] pathForResource:@"NKJPhotoSliderControllerClose"
                                                               ofType:@"png"];
@@ -140,6 +142,7 @@ typedef enum : NSUInteger {
         [self.closeButton addTarget:self action:@selector(closeButtonDidTap:) forControlEvents:UIControlEventTouchUpInside];
         self.closeButton.imageView.contentMode = UIViewContentModeCenter;
         [self.view addSubview:self.closeButton];
+        [self layoutCloseButton];
     }
 
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
@@ -155,6 +158,25 @@ typedef enum : NSUInteger {
     self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * self.currentPage, CGRectGetHeight(self.scrollView.bounds));
     self.scrollInitalized = YES;
 }
+
+#pragma mark - Constraints
+
+- (void)layoutCloseButton
+{
+    self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = @{@"closeButton": self.closeButton};
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-22-[closeButton(32@32)]" options:0 metrics:nil views:views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:[closeButton]-22-|" options:0 metrics:nil views:views]];
+}
+
+- (void)layoutPageControl
+{
+    self.pageControl.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = @{@"pageControl": self.pageControl};
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[pageControl]-22-|" options:0 metrics:nil views:views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[pageControl]|" options:0 metrics:nil views:views]];
+}
+
 
 #pragma mark - UIScrollViewDelegate
 
