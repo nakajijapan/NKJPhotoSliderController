@@ -26,6 +26,9 @@ typedef enum : NSUInteger {
 @property (nonatomic) NKJPhotoSliderControllerScrollMode scrollMode;
 @property (nonatomic) BOOL scrollInitalized;
 @property (nonatomic) BOOL closeAnimating;
+
+@property (nonatomic) UIVisualEffectView *effectView;
+
 @end
 
 @implementation NKJPhotoSliderController
@@ -75,11 +78,11 @@ typedef enum : NSUInteger {
         [self.view addSubview:self.backgroundView];
     } else {
         UIBlurEffect * blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        effectView.frame = self.view.bounds;
-        [self.view addSubview:effectView];
+        self.effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        self.effectView.frame = self.view.bounds;
+        [self.view addSubview:self.effectView];
         
-        [effectView addSubview:self.backgroundView];
+        [self.effectView addSubview:self.backgroundView];
     }
     
     // scrollview setting for Item
@@ -118,7 +121,7 @@ typedef enum : NSUInteger {
         }
     }
     
-    // pagecontrol
+    // Page Control
     if (self.visiblePageControl) {
         self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0.f, CGRectGetHeight(self.view.bounds) - 44.f, CGRectGetWidth(self.view.bounds), 22.f)];
         self.pageControl.numberOfPages = self.imageURLs.count > 0 ? self.imageURLs.count : self.images.count;
