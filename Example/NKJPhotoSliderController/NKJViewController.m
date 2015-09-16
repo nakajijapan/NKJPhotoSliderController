@@ -84,9 +84,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        return [UIScreen mainScreen].bounds.size.width;
-        if ([UIDevice currentDevice].orientation == UIDeviceOrientationPortrait ||
-            [UIDevice currentDevice].orientation == UIDeviceOrientationPortraitUpsideDown) {
+
+        if ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortrait ||
+            [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortraitUpsideDown) {
             return tableView.bounds.size.width;
         } else {
             return tableView.bounds.size.height;
@@ -135,8 +135,8 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([UIDevice currentDevice].orientation == UIDeviceOrientationPortrait ||
-        [UIDevice currentDevice].orientation == UIDeviceOrientationPortraitUpsideDown) {
+    if ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortrait ||
+        [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortraitUpsideDown) {
         return CGSizeMake(collectionView.bounds.size.width, collectionView.bounds.size.width);
     } else {
         return CGSizeMake(self.tableView.bounds.size.width, collectionView.bounds.size.height);
