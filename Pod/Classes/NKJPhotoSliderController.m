@@ -16,18 +16,24 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerScrollModeRotating
 } NKJPhotoSliderControllerScrollMode;
 
+typedef enum : NSUInteger {
+    NKJPhotoSliderControllerUsingImageTypeNone = 0,
+    NKJPhotoSliderControllerUsingImageTypeURL,
+    NKJPhotoSliderControllerUsingImageTypeImage
+} NKJPhotoSliderControllerUsingImageType;
+
 @interface NKJPhotoSliderController()<UIScrollViewDelegate>
 
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
 @property (nonatomic) NSArray *images;
+@property (nonatomic) NKJPhotoSliderControllerUsingImageType usingImageType;
 @property (nonatomic) CGPoint scrollPreviewPoint;
 @property (nonatomic) UIButton *closeButton;
 @property (nonatomic) UIView *backgroundView;
 @property (nonatomic) NKJPhotoSliderControllerScrollMode scrollMode;
 @property (nonatomic) BOOL scrollInitalized;
 @property (nonatomic) BOOL closeAnimating;
-
 @property (nonatomic) UIVisualEffectView *effectView;
 
 @end
@@ -39,6 +45,7 @@ typedef enum : NSUInteger {
     self = [super init];
     if (self) {
         self.imageURLs = imageURLs;
+        self.usingImageType = NKJPhotoSliderControllerUsingImageTypeURL;
         [self setup];
     }
     
@@ -50,9 +57,10 @@ typedef enum : NSUInteger {
     self = [super init];
     if (self) {
         self.images = images;
+        self.usingImageType = NKJPhotoSliderControllerUsingImageTypeImage;
         [self setup];
     }
-
+    
     return self;
 }
 
@@ -71,24 +79,24 @@ typedef enum : NSUInteger {
     // for iOS7
     if ([UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortrait &&
         [UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortraitUpsideDown) {
-
+        
         CGRect bounds = [UIScreen mainScreen].bounds;
         CGSize size = self.view.bounds.size;
         bounds.size.width = size.height;
         bounds.size.height = size.width;
         self.view.bounds = bounds;
-
+        
     } else {
         self.view.frame = [UIScreen mainScreen].bounds;
     }
     
-
+    
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
-
+    
     self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.backgroundView.backgroundColor = self.backgroundColor;
-
+    
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
         [self.view addSubview:self.backgroundView];
     } else {
@@ -111,23 +119,23 @@ typedef enum : NSUInteger {
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.scrollEnabled = YES;
     [self.view addSubview:self.scrollView];
-
-    self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds) * self.imageURLs.count,
+    
+    self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds) * [self imageResources].count,
                                              CGRectGetHeight(self.view.bounds) * 3.f);
     
     CGFloat width = CGRectGetWidth(self.view.bounds);
     CGFloat height = CGRectGetHeight(self.view.bounds);
     CGRect frame = self.view.bounds;
     frame.origin.y = height;
-    if (self.imageURLs.count > 0) {
-        for (NSURL *imageURL in self.imageURLs) {
+    if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeURL) {
+        for (NSURL *imageURL in [self imageResources]) {
             NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
             [self.scrollView addSubview:imageView];
             [imageView loadImage:imageURL];
             frame.origin.x += width;
         }
     } else {
-        for (UIImage *image in self.images) {
+        for (UIImage *image in [self imageResources]) {
             NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
             [self.scrollView addSubview:imageView];
             imageView.imageView.image = image;
@@ -135,10 +143,24 @@ typedef enum : NSUInteger {
         }
     }
     
+    for (id imageResource in [self imageResources]) {
+        
+        NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
+        [self.scrollView addSubview:imageView];
+        
+        if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeURL) {
+            [imageView loadImage:(NSURL *)imageResource];
+        } else {
+            imageView.imageView.image = (UIImage *)imageResource;
+        }
+        frame.origin.x += width;
+    }
+    
+    
     // Page Control
     if (self.visiblePageControl) {
         self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
-        self.pageControl.numberOfPages = self.imageURLs.count > 0 ? self.imageURLs.count : self.images.count;
+        self.pageControl.numberOfPages = [self imageResources].count;
         self.pageControl.currentPage = 0;
         self.pageControl.userInteractionEnabled = false;
         [self.view addSubview:self.pageControl];
@@ -158,7 +180,7 @@ typedef enum : NSUInteger {
         [self.view addSubview:self.closeButton];
         [self layoutCloseButton];
     }
-
+    
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
     }
@@ -222,7 +244,7 @@ typedef enum : NSUInteger {
     
     CGFloat offsetX = fabs(scrollView.contentOffset.x - self.scrollPreviewPoint.x);
     CGFloat offsetY = fabs(scrollView.contentOffset.y - self.scrollPreviewPoint.y);
-
+    
     if (self.scrollMode == NKJPhotoSliderControllerScrollModeNone) {
         if (offsetY > offsetX) {
             self.scrollMode = NKJPhotoSliderControllerScrollModeVertical;
@@ -232,7 +254,7 @@ typedef enum : NSUInteger {
     }
     
     if (self.scrollMode == NKJPhotoSliderControllerScrollModeVertical) {
-
+        
         CGFloat offsetHeight = fabs(scrollView.frame.size.height - scrollView.contentOffset.y);
         CGFloat alpha = 1.f - (fabs(offsetHeight) / (scrollView.frame.size.height / 2.f));
         
@@ -257,13 +279,13 @@ typedef enum : NSUInteger {
     }
     
     [self generateCurrentPage];
-
+    
 }
 
 - (void)generateCurrentPage
 {
     self.currentPage = abs((int)roundf(self.scrollView.contentOffset.x / self.scrollView.frame.size.width));
-
+    
     if (self.visiblePageControl) {
         if (self.pageControl != nil) {
             self.pageControl.currentPage = self.currentPage;
@@ -274,9 +296,9 @@ typedef enum : NSUInteger {
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (self.scrollMode == NKJPhotoSliderControllerScrollModeVertical) {
-
+        
         CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:scrollView];
-
+        
         if (velocity.y < -500.f) {
             self.scrollView.frame = scrollView.frame;
             [self closePhotoSliderWithUp:YES];
@@ -348,7 +370,7 @@ typedef enum : NSUInteger {
         if ([self.delegate respondsToSelector:@selector(photoSliderControllerDidDismiss:)]) {
             [self.delegate photoSliderControllerDidDismiss:self];
         }
-
+        
     }];
 }
 
@@ -366,10 +388,10 @@ typedef enum : NSUInteger {
 // Deprecated Method(from iOS8)
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-
+    
     // iOS7.xでのみ呼び出される
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-
+    
     if ((toInterfaceOrientation == UIDeviceOrientationLandscapeLeft && [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeRight) ||
         (toInterfaceOrientation == UIDeviceOrientationLandscapeRight && [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeLeft)
         ) {
@@ -382,7 +404,7 @@ typedef enum : NSUInteger {
         self.view.bounds = bounds;
     }
     
-
+    
     [self traitCollectionDidChange:nil];
 }
 
@@ -390,7 +412,7 @@ typedef enum : NSUInteger {
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
     self.scrollMode = NKJPhotoSliderControllerScrollModeRotating;
-
+    
     CGRect contentViewBounds = self.view.bounds;
     CGFloat height = CGRectGetHeight(contentViewBounds);
     
@@ -402,7 +424,7 @@ typedef enum : NSUInteger {
     
     // Scroll View
     self.scrollView.contentSize = CGSizeMake(
-                                             CGRectGetWidth(contentViewBounds) * (CGFloat)self.imageURLs.count,
+                                             CGRectGetWidth(contentViewBounds) * (CGFloat)[self imageResources].count,
                                              CGRectGetHeight(contentViewBounds) * 3.0f
                                              );
     
@@ -426,7 +448,20 @@ typedef enum : NSUInteger {
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
     
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
+    
+}
 
+#pragma mark - Private Method
+
+- (NSArray *)imageResources
+{
+    if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeURL) {
+        return self.imageURLs;
+    } else if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeImage) {
+        return self.images;
+    }
+    
+    return nil;
 }
 
 @end
