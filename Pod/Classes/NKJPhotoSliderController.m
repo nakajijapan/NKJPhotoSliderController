@@ -13,6 +13,7 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerScrollModeNone = 0,
     NKJPhotoSliderControllerScrollModeVertical,
     NKJPhotoSliderControllerScrollModeHorizontal,
+    NKJPhotoSliderControllerScrollModeRotating
 } NKJPhotoSliderControllerScrollMode;
 
 @interface NKJPhotoSliderController()<UIScrollViewDelegate>
@@ -192,6 +193,10 @@ typedef enum : NSUInteger {
         return;
     }
     
+    if (self.scrollMode == NKJPhotoSliderControllerScrollModeRotating) {
+        return;
+    }
+    
     CGFloat offsetX = fabs(scrollView.contentOffset.x - self.scrollPreviewPoint.x);
     CGFloat offsetY = fabs(scrollView.contentOffset.y - self.scrollPreviewPoint.y);
 
@@ -332,6 +337,46 @@ typedef enum : NSUInteger {
     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
     
     return bundle;
+}
+
+#pragma mark - UITraitEnvironment
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    self.scrollMode = NKJPhotoSliderControllerScrollModeRotating;
+    
+    CGRect contentViewBounds = self.view.bounds;
+    CGFloat height = CGRectGetHeight(contentViewBounds);
+    
+    
+    // Background View
+    self.backgroundView.frame = contentViewBounds;
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
+        self.effectView.frame = contentViewBounds;
+    }
+    
+    // Scroll View
+    self.scrollView.contentSize = CGSizeMake(
+                                             CGRectGetWidth(contentViewBounds) * (CGFloat)self.imageURLs.count,
+                                             CGRectGetHeight(contentViewBounds) * 3.0f
+                                             );
+    
+    self.scrollView.frame = contentViewBounds;
+    
+    // ImageViews
+    CGRect frame = CGRectMake(0.f,
+                              CGRectGetHeight(contentViewBounds),
+                              CGRectGetWidth(contentViewBounds),
+                              CGRectGetHeight(contentViewBounds));
+    
+    for (NSInteger i = 0; i < self.scrollView.subviews.count; i++) {
+        NKJPhotoSliderImageView *imageView = self.scrollView.subviews[i];
+        imageView.frame = frame;
+        frame.origin.x += contentViewBounds.size.width;
+        imageView.scrollView.frame = contentViewBounds;
+    }
+    
+    self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
 }
 
 @end
