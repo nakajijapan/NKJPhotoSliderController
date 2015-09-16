@@ -68,7 +68,21 @@ typedef enum : NSUInteger {
 {
     [super viewDidLoad];
     
-    self.view.frame = [UIScreen mainScreen].bounds;
+    // for iOS7
+    if ([UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortrait &&
+        [UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortraitUpsideDown) {
+
+        CGRect bounds = [UIScreen mainScreen].bounds;
+        CGSize size = self.view.bounds.size;
+        bounds.size.width = size.height;
+        bounds.size.height = size.width;
+        self.view.bounds = bounds;
+
+    } else {
+        self.view.frame = [UIScreen mainScreen].bounds;
+    }
+    
+
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
 
@@ -105,7 +119,6 @@ typedef enum : NSUInteger {
     CGFloat height = CGRectGetHeight(self.view.bounds);
     CGRect frame = self.view.bounds;
     frame.origin.y = height;
-    
     if (self.imageURLs.count > 0) {
         for (NSURL *imageURL in self.imageURLs) {
             NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
@@ -248,7 +261,6 @@ typedef enum : NSUInteger {
 
 - (void)generateCurrentPage
 {
-
     self.currentPage = abs((int)roundf(self.scrollView.contentOffset.x / self.scrollView.frame.size.width));
 
     if (self.visiblePageControl) {
@@ -256,7 +268,6 @@ typedef enum : NSUInteger {
             self.pageControl.currentPage = self.currentPage;
         }
     }
-
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -351,14 +362,36 @@ typedef enum : NSUInteger {
 
 #pragma mark - UITraitEnvironment
 
+// Deprecated Method(from iOS8)
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+
+    // iOS7.xでのみ呼び出される
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+
+    if ((toInterfaceOrientation == UIDeviceOrientationLandscapeLeft && [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeRight) ||
+        (toInterfaceOrientation == UIDeviceOrientationLandscapeRight && [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeLeft)
+        ) {
+        // none
+    } else {
+        CGRect bounds = self.view.bounds;
+        CGSize size = self.view.bounds.size;
+        bounds.size.width = size.height;
+        bounds.size.height = size.width;
+        self.view.bounds = bounds;
+    }
+    
+
+    [self traitCollectionDidChange:nil];
+}
+
+
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
     self.scrollMode = NKJPhotoSliderControllerScrollModeRotating;
-    
     CGRect contentViewBounds = self.view.bounds;
     CGFloat height = CGRectGetHeight(contentViewBounds);
-    
-    
+
     // Background View
     self.backgroundView.frame = contentViewBounds;
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
@@ -372,18 +405,20 @@ typedef enum : NSUInteger {
                                              );
     
     self.scrollView.frame = contentViewBounds;
-    
+
     // ImageViews
     CGRect frame = CGRectMake(0.f,
                               CGRectGetHeight(contentViewBounds),
                               CGRectGetWidth(contentViewBounds),
                               CGRectGetHeight(contentViewBounds));
-    
+
     for (NSInteger i = 0; i < self.scrollView.subviews.count; i++) {
+        
         NKJPhotoSliderImageView *imageView = self.scrollView.subviews[i];
         imageView.frame = frame;
         frame.origin.x += contentViewBounds.size.width;
         imageView.scrollView.frame = contentViewBounds;
+        
     }
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
