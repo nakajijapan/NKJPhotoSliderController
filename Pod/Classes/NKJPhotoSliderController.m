@@ -230,10 +230,10 @@ typedef enum : NSUInteger {
         scrollView.contentOffset = contentOffset;
         
         CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-        if (self.scrollView.contentOffset.y > screenHeight * 1.4) {
-            [self closePhotoSliderWithUp:true];
-        } else if (self.scrollView.contentOffset.y < screenHeight * 0.6) {
-            [self closePhotoSliderWithUp:false];
+        if (self.scrollView.contentOffset.y > screenHeight * 1.4f) {
+            [self closePhotoSliderWithUp:YES];
+        } else if (self.scrollView.contentOffset.y < screenHeight * 0.6f) {
+            [self closePhotoSliderWithUp:FALSE];
         }
         
     } else if (self.scrollMode == NKJPhotoSliderControllerScrollModeHorizontal) {
