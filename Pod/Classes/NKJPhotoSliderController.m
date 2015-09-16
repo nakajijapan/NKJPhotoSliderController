@@ -242,11 +242,12 @@ typedef enum : NSUInteger {
         contentOffset.x = self.scrollPreviewPoint.x;
         scrollView.contentOffset = contentOffset;
         
-        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+        CGFloat screenHeight = self.view.bounds.size.height;
+        
         if (self.scrollView.contentOffset.y > screenHeight * 1.4f) {
             [self closePhotoSliderWithUp:YES];
         } else if (self.scrollView.contentOffset.y < screenHeight * 0.6f) {
-            [self closePhotoSliderWithUp:FALSE];
+            [self closePhotoSliderWithUp:NO];
         }
         
     } else if (self.scrollMode == NKJPhotoSliderControllerScrollModeHorizontal) {
@@ -389,9 +390,10 @@ typedef enum : NSUInteger {
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
     self.scrollMode = NKJPhotoSliderControllerScrollModeRotating;
+
     CGRect contentViewBounds = self.view.bounds;
     CGFloat height = CGRectGetHeight(contentViewBounds);
-
+    
     // Background View
     self.backgroundView.frame = contentViewBounds;
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
@@ -405,13 +407,13 @@ typedef enum : NSUInteger {
                                              );
     
     self.scrollView.frame = contentViewBounds;
-
+    
     // ImageViews
     CGRect frame = CGRectMake(0.f,
                               CGRectGetHeight(contentViewBounds),
                               CGRectGetWidth(contentViewBounds),
                               CGRectGetHeight(contentViewBounds));
-
+    
     for (NSInteger i = 0; i < self.scrollView.subviews.count; i++) {
         
         NKJPhotoSliderImageView *imageView = self.scrollView.subviews[i];
@@ -422,6 +424,9 @@ typedef enum : NSUInteger {
     }
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
+    
+    self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
+
 }
 
 @end
