@@ -69,6 +69,13 @@
     UITapGestureRecognizer *doubleTabGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didDoubleTap:)];
     doubleTabGesture.numberOfTapsRequired = 2;
     [self addGestureRecognizer:doubleTabGesture];
+    
+    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth |
+                                      UIViewAutoresizingFlexibleLeftMargin |
+                                      UIViewAutoresizingFlexibleRightMargin |
+                                      UIViewAutoresizingFlexibleTopMargin |
+                                      UIViewAutoresizingFlexibleHeight |
+                                      UIViewAutoresizingFlexibleBottomMargin;
 }
 
 - (void)loadImage:(NSURL *)imageURL

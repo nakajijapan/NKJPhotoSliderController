@@ -13,6 +13,7 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerScrollModeNone = 0,
     NKJPhotoSliderControllerScrollModeVertical,
     NKJPhotoSliderControllerScrollModeHorizontal,
+    NKJPhotoSliderControllerScrollModeRotating
 } NKJPhotoSliderControllerScrollMode;
 
 @interface NKJPhotoSliderController()<UIScrollViewDelegate>
@@ -26,6 +27,9 @@ typedef enum : NSUInteger {
 @property (nonatomic) NKJPhotoSliderControllerScrollMode scrollMode;
 @property (nonatomic) BOOL scrollInitalized;
 @property (nonatomic) BOOL closeAnimating;
+
+@property (nonatomic) UIVisualEffectView *effectView;
+
 @end
 
 @implementation NKJPhotoSliderController
@@ -64,7 +68,21 @@ typedef enum : NSUInteger {
 {
     [super viewDidLoad];
     
-    self.view.frame = [UIScreen mainScreen].bounds;
+    // for iOS7
+    if ([UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortrait &&
+        [UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortraitUpsideDown) {
+
+        CGRect bounds = [UIScreen mainScreen].bounds;
+        CGSize size = self.view.bounds.size;
+        bounds.size.width = size.height;
+        bounds.size.height = size.width;
+        self.view.bounds = bounds;
+
+    } else {
+        self.view.frame = [UIScreen mainScreen].bounds;
+    }
+    
+
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
 
@@ -75,11 +93,11 @@ typedef enum : NSUInteger {
         [self.view addSubview:self.backgroundView];
     } else {
         UIBlurEffect * blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        effectView.frame = self.view.bounds;
-        [self.view addSubview:effectView];
+        self.effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        self.effectView.frame = self.view.bounds;
+        [self.view addSubview:self.effectView];
         
-        [effectView addSubview:self.backgroundView];
+        [self.effectView addSubview:self.backgroundView];
     }
     
     // scrollview setting for Item
@@ -101,7 +119,6 @@ typedef enum : NSUInteger {
     CGFloat height = CGRectGetHeight(self.view.bounds);
     CGRect frame = self.view.bounds;
     frame.origin.y = height;
-    
     if (self.imageURLs.count > 0) {
         for (NSURL *imageURL in self.imageURLs) {
             NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
@@ -118,17 +135,19 @@ typedef enum : NSUInteger {
         }
     }
     
-    // pagecontrol
+    // Page Control
     if (self.visiblePageControl) {
-        self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0.f, CGRectGetHeight(self.view.bounds) - 44.f, CGRectGetWidth(self.view.bounds), 22.f)];
+        self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
         self.pageControl.numberOfPages = self.imageURLs.count > 0 ? self.imageURLs.count : self.images.count;
         self.pageControl.currentPage = 0;
         self.pageControl.userInteractionEnabled = false;
         [self.view addSubview:self.pageControl];
+        [self layoutPageControl];
     }
     
+    // Close Button
     if (self.visibleCloseButton) {
-        self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 32 - 8, 8, 32, 32)];
+        self.closeButton = [[UIButton alloc] initWithFrame:CGRectZero];
         
         NSString *imagePath = [[self resourceBundle] pathForResource:@"NKJPhotoSliderControllerClose"
                                                               ofType:@"png"];
@@ -137,6 +156,7 @@ typedef enum : NSUInteger {
         [self.closeButton addTarget:self action:@selector(closeButtonDidTap:) forControlEvents:UIControlEventTouchUpInside];
         self.closeButton.imageView.contentMode = UIViewContentModeCenter;
         [self.view addSubview:self.closeButton];
+        [self layoutCloseButton];
     }
 
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
@@ -153,6 +173,35 @@ typedef enum : NSUInteger {
     self.scrollInitalized = YES;
 }
 
+#pragma mark - Touch Events
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.view removeFromSuperview];
+    }];
+}
+
+
+#pragma mark - Constraints
+
+- (void)layoutCloseButton
+{
+    self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = @{@"closeButton": self.closeButton};
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-22-[closeButton(32@32)]" options:0 metrics:nil views:views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:[closeButton]-22-|" options:0 metrics:nil views:views]];
+}
+
+- (void)layoutPageControl
+{
+    self.pageControl.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = @{@"pageControl": self.pageControl};
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[pageControl]-22-|" options:0 metrics:nil views:views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[pageControl]|" options:0 metrics:nil views:views]];
+}
+
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -164,6 +213,10 @@ typedef enum : NSUInteger {
 {
     if (!self.scrollInitalized) {
         [self generateCurrentPage];
+        return;
+    }
+    
+    if (self.scrollMode == NKJPhotoSliderControllerScrollModeRotating) {
         return;
     }
     
@@ -189,11 +242,12 @@ typedef enum : NSUInteger {
         contentOffset.x = self.scrollPreviewPoint.x;
         scrollView.contentOffset = contentOffset;
         
-        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-        if (self.scrollView.contentOffset.y > screenHeight * 1.4) {
-            [self closePhotoSliderWithUp:true];
-        } else if (self.scrollView.contentOffset.y < screenHeight * 0.6) {
-            [self closePhotoSliderWithUp:false];
+        CGFloat screenHeight = self.view.bounds.size.height;
+        
+        if (self.scrollView.contentOffset.y > screenHeight * 1.4f) {
+            [self closePhotoSliderWithUp:YES];
+        } else if (self.scrollView.contentOffset.y < screenHeight * 0.6f) {
+            [self closePhotoSliderWithUp:NO];
         }
         
     } else if (self.scrollMode == NKJPhotoSliderControllerScrollModeHorizontal) {
@@ -208,7 +262,6 @@ typedef enum : NSUInteger {
 
 - (void)generateCurrentPage
 {
-
     self.currentPage = abs((int)roundf(self.scrollView.contentOffset.x / self.scrollView.frame.size.width));
 
     if (self.visiblePageControl) {
@@ -216,7 +269,6 @@ typedef enum : NSUInteger {
             self.pageControl.currentPage = self.currentPage;
         }
     }
-
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -307,6 +359,74 @@ typedef enum : NSUInteger {
     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
     
     return bundle;
+}
+
+#pragma mark - UITraitEnvironment
+
+// Deprecated Method(from iOS8)
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+
+    // iOS7.xでのみ呼び出される
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+
+    if ((toInterfaceOrientation == UIDeviceOrientationLandscapeLeft && [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeRight) ||
+        (toInterfaceOrientation == UIDeviceOrientationLandscapeRight && [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeLeft)
+        ) {
+        // none
+    } else {
+        CGRect bounds = self.view.bounds;
+        CGSize size = self.view.bounds.size;
+        bounds.size.width = size.height;
+        bounds.size.height = size.width;
+        self.view.bounds = bounds;
+    }
+    
+
+    [self traitCollectionDidChange:nil];
+}
+
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    self.scrollMode = NKJPhotoSliderControllerScrollModeRotating;
+
+    CGRect contentViewBounds = self.view.bounds;
+    CGFloat height = CGRectGetHeight(contentViewBounds);
+    
+    // Background View
+    self.backgroundView.frame = contentViewBounds;
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
+        self.effectView.frame = contentViewBounds;
+    }
+    
+    // Scroll View
+    self.scrollView.contentSize = CGSizeMake(
+                                             CGRectGetWidth(contentViewBounds) * (CGFloat)self.imageURLs.count,
+                                             CGRectGetHeight(contentViewBounds) * 3.0f
+                                             );
+    
+    self.scrollView.frame = contentViewBounds;
+    
+    // ImageViews
+    CGRect frame = CGRectMake(0.f,
+                              CGRectGetHeight(contentViewBounds),
+                              CGRectGetWidth(contentViewBounds),
+                              CGRectGetHeight(contentViewBounds));
+    
+    for (NSInteger i = 0; i < self.scrollView.subviews.count; i++) {
+        
+        NKJPhotoSliderImageView *imageView = self.scrollView.subviews[i];
+        imageView.frame = frame;
+        frame.origin.x += contentViewBounds.size.width;
+        imageView.scrollView.frame = contentViewBounds;
+        
+    }
+    
+    self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
+    
+    self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
+
 }
 
 @end

@@ -20,7 +20,9 @@
     NKJPhotoSliderControllerDelegate
 >
 
-@property IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) UICollectionView *collectionView;
+
 @property NSArray *images;
 @end
 
@@ -49,6 +51,13 @@
     return NO;
 }
 
+- (void)viewDidLayoutSubviews
+{
+    if (self.collectionView != nil) {
+        [self.collectionView reloadData];
+    }
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -63,11 +72,28 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell01"];
-    UICollectionView *collectionView = (UICollectionView *)[cell viewWithTag:1];
-    collectionView.delegate = self;
-    collectionView.dataSource = self;
+    self.collectionView = (UICollectionView *)[cell viewWithTag:1];
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
     
     return cell;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == 0) {
+
+        if ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortrait ||
+            [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortraitUpsideDown) {
+            return tableView.bounds.size.width;
+        } else {
+            return tableView.bounds.size.height;
+        }
+    }
+    
+    return 0.f;
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -107,6 +133,22 @@
     [self presentViewController:photoSlider animated:YES completion:nil];
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortrait ||
+        [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortraitUpsideDown) {
+        return CGSizeMake(collectionView.bounds.size.width, collectionView.bounds.size.width);
+    } else {
+        return CGSizeMake(self.tableView.bounds.size.width, collectionView.bounds.size.height);
+    }
+}
+
+#pragma mark - UIContentContainer
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [self.tableView reloadData];
+}
 
 #pragma mark - NKJPhotoSliderControllerDelegate
 
