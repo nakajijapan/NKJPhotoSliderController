@@ -160,6 +160,16 @@ typedef enum : NSUInteger {
     self.scrollInitalized = YES;
 }
 
+#pragma mark - Touch Events
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.view removeFromSuperview];
+    }];
+}
+
+
 #pragma mark - Constraints
 
 - (void)layoutCloseButton
