@@ -27,6 +27,7 @@ typedef enum : NSUInteger {
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
 @property (nonatomic) NSArray *images;
+@property (nonatomic) NSMutableArray *imageViews;
 @property (nonatomic) NKJPhotoSliderControllerUsingImageType usingImageType;
 @property (nonatomic) CGPoint scrollPreviewPoint;
 @property (nonatomic) UIButton *closeButton;
@@ -70,6 +71,7 @@ typedef enum : NSUInteger {
     self.scrollInitalized = NO;
     self.closeAnimating = NO;
     self.backgroundColor = [UIColor blackColor];
+    self.imageViews = [NSMutableArray array];
 }
 
 - (void)viewDidLoad
@@ -139,8 +141,8 @@ typedef enum : NSUInteger {
             imageView.imageView.image = (UIImage *)imageResource;
         }
         frame.origin.x += width;
+        [self.imageViews addObject:imageView];
     }
-    
     
     // Page Control
     if (self.visiblePageControl) {
@@ -263,8 +265,18 @@ typedef enum : NSUInteger {
         scrollView.contentOffset = contentOffset;
     }
     
-    [self generateCurrentPage];
+    // Save current page index.
+    NSInteger previousPage = self.pageControl.currentPage;
     
+    // Update current page index.
+    [self generateCurrentPage];
+
+    // If page index has changed - reset zoom scale for previous image.
+    if (previousPage != self.pageControl.currentPage) {
+        NKJPhotoSliderImageView *imageView = self.imageViews[previousPage];
+        imageView.scrollView.zoomScale = imageView.scrollView.minimumZoomScale;
+    }
+
 }
 
 - (void)generateCurrentPage
