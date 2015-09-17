@@ -127,21 +127,6 @@ typedef enum : NSUInteger {
     CGFloat height = CGRectGetHeight(self.view.bounds);
     CGRect frame = self.view.bounds;
     frame.origin.y = height;
-    if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeURL) {
-        for (NSURL *imageURL in [self imageResources]) {
-            NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
-            [self.scrollView addSubview:imageView];
-            [imageView loadImage:imageURL];
-            frame.origin.x += width;
-        }
-    } else {
-        for (UIImage *image in [self imageResources]) {
-            NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
-            [self.scrollView addSubview:imageView];
-            imageView.imageView.image = image;
-            frame.origin.x += width;
-        }
-    }
     
     for (id imageResource in [self imageResources]) {
         
