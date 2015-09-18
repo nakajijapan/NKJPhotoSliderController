@@ -468,12 +468,10 @@ typedef enum : NSUInteger {
         imageView.frame = frame;
         frame.origin.x += contentViewBounds.size.width;
         imageView.scrollView.frame = contentViewBounds;
-        NSLog(@"%@", NSStringFromCGRect(imageView.frame));
     }
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
     
-    NSLog(@"%@", NSStringFromCGPoint(self.scrollView.contentOffset));
     
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
     
