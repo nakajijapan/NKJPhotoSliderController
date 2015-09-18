@@ -103,9 +103,6 @@
     }
 
     [self.scrollView setZoomScale:scale animated:YES];
-    if ([self.delegate respondsToSelector:@selector(photoSliderImageViewDidDoubleTap:atScale:)]) {
-        [self.delegate photoSliderImageViewDidDoubleTap:self atScale:scale];
-    }
 
 }
 

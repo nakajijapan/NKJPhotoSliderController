@@ -477,15 +477,6 @@ typedef enum : NSUInteger {
     
 }
 
-#pragma mark - NKJPhotoSliderImageViewDelegate
-
-- (void)photoSliderImageViewDidDoubleTap:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale
-{
-    if (scale == 1.f) {
-        self.scrollView.scrollEnabled = YES;
-    }
-}
-
 #pragma mark - Private Method
 
 - (NSArray *)imageResources
