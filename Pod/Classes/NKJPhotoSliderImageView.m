@@ -113,4 +113,11 @@
     return self.imageView;
 }
 
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
+{
+    if ([self.delegate respondsToSelector:@selector(photoSliderImageViewDidEndZooming:atScale:)]) {
+        [self.delegate photoSliderImageViewDidEndZooming:self atScale:scale];
+    }
+}
+
 @end

@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="356" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="jUd-ih-uZ8">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell01" rowHeight="320" id="wck-aO-hf1">
@@ -76,11 +76,17 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="jUd-ih-uZ8" firstAttribute="top" secondItem="k0l-QV-tnf" secondAttribute="bottom" id="AYC-GY-q6U"/>
                             <constraint firstItem="jUd-ih-uZ8" firstAttribute="leading" secondItem="Poz-rR-HFy" secondAttribute="leading" id="Bke-Ee-7Bu"/>
                             <constraint firstAttribute="trailing" secondItem="jUd-ih-uZ8" secondAttribute="trailing" id="CYz-TM-N6i"/>
                             <constraint firstItem="Mn1-QD-7cy" firstAttribute="top" secondItem="jUd-ih-uZ8" secondAttribute="bottom" id="CiB-Jv-HCw"/>
                             <constraint firstItem="jUd-ih-uZ8" firstAttribute="top" secondItem="Poz-rR-HFy" secondAttribute="top" id="xUx-1d-wgc"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="xUx-1d-wgc"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="tableView" destination="jUd-ih-uZ8" id="FPr-tF-ILY"/>
@@ -88,7 +94,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ImD-Ka-m1i" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1092" y="634"/>
+            <point key="canvasLocation" x="391" y="689"/>
         </scene>
     </scenes>
 </document>
