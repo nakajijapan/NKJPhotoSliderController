@@ -95,12 +95,18 @@
 
 - (void)didDoubleTap:(UIGestureRecognizer *)sender
 {
+    CGFloat scale = 0.0;
     if (self.scrollView.zoomScale == 1.0) {
-        [self.scrollView setZoomScale:2.0 animated:YES];
+        scale = 2.f;
     } else {
-        [self.scrollView setZoomScale:0.0 animated:YES];
+        scale = 1.f;
     }
+
+    [self.scrollView setZoomScale:scale animated:YES];
+
 }
+
+#pragma mark - UIScrollViewDelegate
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {

@@ -22,7 +22,7 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerUsingImageTypeImage
 } NKJPhotoSliderControllerUsingImageType;
 
-@interface NKJPhotoSliderController()<UIScrollViewDelegate>
+@interface NKJPhotoSliderController()<UIScrollViewDelegate, NKJPhotoSliderImageViewDelegate>
 
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
@@ -36,6 +36,7 @@ typedef enum : NSUInteger {
 @property (nonatomic) BOOL scrollInitalized;
 @property (nonatomic) BOOL closeAnimating;
 @property (nonatomic) UIVisualEffectView *effectView;
+@property (nonatomic) NSInteger previousPage;
 
 @end
 
@@ -72,6 +73,7 @@ typedef enum : NSUInteger {
     self.closeAnimating = NO;
     self.backgroundColor = [UIColor blackColor];
     self.imageViews = [NSMutableArray array];
+    self.currentPage = 0;
 }
 
 - (void)viewDidLoad
@@ -121,9 +123,11 @@ typedef enum : NSUInteger {
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.scrollEnabled = YES;
     [self.view addSubview:self.scrollView];
+    [self layoutScrollView];
     
     self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds) * [self imageResources].count,
                                              CGRectGetHeight(self.view.bounds) * 3.f);
+    
     
     CGFloat width = CGRectGetWidth(self.view.bounds);
     CGFloat height = CGRectGetHeight(self.view.bounds);
@@ -133,6 +137,7 @@ typedef enum : NSUInteger {
     for (id imageResource in [self imageResources]) {
         
         NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
+        imageView.delegate = self;
         [self.scrollView addSubview:imageView];
         
         if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeURL) {
@@ -210,17 +215,34 @@ typedef enum : NSUInteger {
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[pageControl]|" options:0 metrics:nil views:views]];
 }
 
+- (void)layoutScrollView
+{
+    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = @{@"scrollView": self.scrollView};
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics:nil views:views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics:nil views:views]];
+    
+}
 
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
+    self.previousPage = self.currentPage;
+
     self.scrollPreviewPoint = scrollView.contentOffset;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (!self.scrollInitalized) {
+        [self generateCurrentPage];
+        return;
+    }
+    
+    NKJPhotoSliderImageView *imageView = self.imageViews[self.currentPage];
+    
+    if (imageView.scrollView.zoomScale > 1.0) {
         [self generateCurrentPage];
         return;
     }
@@ -265,19 +287,11 @@ typedef enum : NSUInteger {
         scrollView.contentOffset = contentOffset;
     }
     
-    // Save current page index.
-    NSInteger previousPage = self.pageControl.currentPage;
-    
     // Update current page index.
     [self generateCurrentPage];
 
-    // If page index has changed - reset zoom scale for previous image.
-    if (previousPage != self.pageControl.currentPage) {
-        NKJPhotoSliderImageView *imageView = self.imageViews[previousPage];
-        imageView.scrollView.zoomScale = imageView.scrollView.minimumZoomScale;
-    }
-
 }
+
 
 - (void)generateCurrentPage
 {
@@ -297,11 +311,15 @@ typedef enum : NSUInteger {
         CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:scrollView];
         
         if (velocity.y < -500.f) {
+
             self.scrollView.frame = scrollView.frame;
             [self closePhotoSliderWithUp:YES];
+
         } else if (velocity.y > 500.f) {
+
             self.scrollView.frame = scrollView.frame;
             [self closePhotoSliderWithUp:NO];
+
         }
     }
 }
@@ -331,19 +349,31 @@ typedef enum : NSUInteger {
                           delay:0.f
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
+
                          self.scrollView.frame = CGRectMake(0.f, movedHeight, screenWidth, screenHeight);
                          self.backgroundView.alpha = 0.f;
                          self.closeButton.alpha = 0.f;
                          self.view.alpha = 0.f;
+
                      }
                      completion:^(BOOL finished) {
+
                          [self dissmissViewControllerAnimated:NO];
                          self.closeAnimating = NO;
+
                      }];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    // If page index has changed - reset zoom scale for previous image.
+    if (self.previousPage != self.currentPage) {
+        
+        NKJPhotoSliderImageView *imageView = self.imageViews[self.previousPage];
+        imageView.scrollView.zoomScale = imageView.scrollView.minimumZoomScale;
+
+    }
+    
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
 }
 
@@ -373,8 +403,7 @@ typedef enum : NSUInteger {
 
 - (NSBundle *)resourceBundle
 {
-    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"NKJPhotoSliderController"
-                                                           ofType:@"bundle"];
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"NKJPhotoSliderController" ofType:@"bundle"];
     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
     
     return bundle;
@@ -439,10 +468,10 @@ typedef enum : NSUInteger {
         imageView.frame = frame;
         frame.origin.x += contentViewBounds.size.width;
         imageView.scrollView.frame = contentViewBounds;
-        
     }
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
+    
     
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
     
@@ -460,5 +489,6 @@ typedef enum : NSUInteger {
     
     return nil;
 }
+
 
 @end
