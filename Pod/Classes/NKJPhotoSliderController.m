@@ -22,7 +22,7 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerUsingImageTypeImage
 } NKJPhotoSliderControllerUsingImageType;
 
-@interface NKJPhotoSliderController()<UIScrollViewDelegate>
+@interface NKJPhotoSliderController()<UIScrollViewDelegate, NKJPhotoSliderImageViewDelegate>
 
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
@@ -145,6 +145,7 @@ typedef enum : NSUInteger {
             imageView.imageView.image = (UIImage *)imageResource;
         }
         frame.origin.x += width;
+        imageView.delegate = self;
         [self.imageViews addObject:imageView];
     }
     
@@ -243,6 +244,7 @@ typedef enum : NSUInteger {
     
     if (imageView.scrollView.zoomScale > 1.0) {
         [self generateCurrentPage];
+        self.scrollView.scrollEnabled = NO;
         return;
     }
     
@@ -476,6 +478,17 @@ typedef enum : NSUInteger {
     
 }
 
+#pragma mark - NKJPhotoSliderImageViewDelegate
+
+- (void) photoSliderImageViewDidEndZooming:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale
+{
+    if (scale <= 1.0) {
+        self.scrollView.scrollEnabled = YES;
+    } else {
+        self.scrollView.scrollEnabled = NO;
+    }
+}
+
 #pragma mark - Private Method
 
 - (NSArray *)imageResources
@@ -488,6 +501,5 @@ typedef enum : NSUInteger {
     
     return nil;
 }
-
 
 @end

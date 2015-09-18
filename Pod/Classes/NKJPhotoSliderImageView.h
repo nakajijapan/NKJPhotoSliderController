@@ -8,9 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol NKJPhotoSliderImageViewDelegate;
+
 @interface NKJPhotoSliderImageView : UIImageView
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) UIScrollView *scrollView;
+@property (nonatomic) id<NKJPhotoSliderImageViewDelegate> delegate;
 - (void)loadImage:(NSURL *)imageURL;
+
 @end
 
+@protocol NKJPhotoSliderImageViewDelegate <NSObject>
+@optional
+- (void)photoSliderImageViewDidEndZooming:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale;
+@end
