@@ -137,7 +137,6 @@ typedef enum : NSUInteger {
     for (id imageResource in [self imageResources]) {
         
         NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
-        imageView.delegate = self;
         [self.scrollView addSubview:imageView];
         
         if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeURL) {
