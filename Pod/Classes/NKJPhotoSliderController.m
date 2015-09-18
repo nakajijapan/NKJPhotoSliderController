@@ -22,7 +22,7 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerUsingImageTypeImage
 } NKJPhotoSliderControllerUsingImageType;
 
-@interface NKJPhotoSliderController()<UIScrollViewDelegate>
+@interface NKJPhotoSliderController()<UIScrollViewDelegate, NKJPhotoSliderImageViewDelegate>
 
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
@@ -36,6 +36,7 @@ typedef enum : NSUInteger {
 @property (nonatomic) BOOL scrollInitalized;
 @property (nonatomic) BOOL closeAnimating;
 @property (nonatomic) UIVisualEffectView *effectView;
+@property (nonatomic) NSInteger previousPage;
 
 @end
 
@@ -136,6 +137,7 @@ typedef enum : NSUInteger {
     for (id imageResource in [self imageResources]) {
         
         NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
+        imageView.delegate = self;
         [self.scrollView addSubview:imageView];
         
         if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeURL) {
@@ -226,12 +228,21 @@ typedef enum : NSUInteger {
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
+    self.previousPage = self.currentPage;
+
     self.scrollPreviewPoint = scrollView.contentOffset;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (!self.scrollInitalized) {
+        [self generateCurrentPage];
+        return;
+    }
+    
+    NKJPhotoSliderImageView *imageView = self.imageViews[self.currentPage];
+    
+    if (imageView.scrollView.zoomScale > 1.0) {
         [self generateCurrentPage];
         return;
     }
@@ -276,19 +287,11 @@ typedef enum : NSUInteger {
         scrollView.contentOffset = contentOffset;
     }
     
-    // Save current page index.
-    NSInteger previousPage = self.pageControl.currentPage;
-    
     // Update current page index.
     [self generateCurrentPage];
     
-    // If page index has changed - reset zoom scale for previous image.
-    if (previousPage != self.pageControl.currentPage) {
-        NKJPhotoSliderImageView *imageView = self.imageViews[previousPage];
-        imageView.scrollView.zoomScale = imageView.scrollView.minimumZoomScale;
-    }
-    
 }
+
 
 - (void)generateCurrentPage
 {
@@ -308,11 +311,15 @@ typedef enum : NSUInteger {
         CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:scrollView];
         
         if (velocity.y < -500.f) {
+
             self.scrollView.frame = scrollView.frame;
             [self closePhotoSliderWithUp:YES];
+
         } else if (velocity.y > 500.f) {
+
             self.scrollView.frame = scrollView.frame;
             [self closePhotoSliderWithUp:NO];
+
         }
     }
 }
@@ -342,19 +349,31 @@ typedef enum : NSUInteger {
                           delay:0.f
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
+
                          self.scrollView.frame = CGRectMake(0.f, movedHeight, screenWidth, screenHeight);
                          self.backgroundView.alpha = 0.f;
                          self.closeButton.alpha = 0.f;
                          self.view.alpha = 0.f;
+
                      }
                      completion:^(BOOL finished) {
+
                          [self dissmissViewControllerAnimated:NO];
                          self.closeAnimating = NO;
+
                      }];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    // If page index has changed - reset zoom scale for previous image.
+    if (self.previousPage != self.currentPage) {
+        
+        NKJPhotoSliderImageView *imageView = self.imageViews[self.previousPage];
+        imageView.scrollView.zoomScale = imageView.scrollView.minimumZoomScale;
+
+    }
+    
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
 }
 
@@ -384,8 +403,7 @@ typedef enum : NSUInteger {
 
 - (NSBundle *)resourceBundle
 {
-    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"NKJPhotoSliderController"
-                                                           ofType:@"bundle"];
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"NKJPhotoSliderController" ofType:@"bundle"];
     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
     
     return bundle;
@@ -450,13 +468,24 @@ typedef enum : NSUInteger {
         imageView.frame = frame;
         frame.origin.x += contentViewBounds.size.width;
         imageView.scrollView.frame = contentViewBounds;
-        
+        NSLog(@"%@", NSStringFromCGRect(imageView.frame));
     }
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
     
+    NSLog(@"%@", NSStringFromCGPoint(self.scrollView.contentOffset));
+    
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
     
+}
+
+#pragma mark - NKJPhotoSliderImageViewDelegate
+
+- (void)photoSliderImageViewDidDoubleTap:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale
+{
+    if (scale == 1.f) {
+        self.scrollView.scrollEnabled = YES;
+    }
 }
 
 #pragma mark - Private Method
@@ -471,5 +500,6 @@ typedef enum : NSUInteger {
     
     return nil;
 }
+
 
 @end
