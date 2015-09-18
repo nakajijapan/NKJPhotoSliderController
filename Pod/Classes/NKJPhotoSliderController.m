@@ -27,6 +27,7 @@ typedef enum : NSUInteger {
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
 @property (nonatomic) NSArray *images;
+@property (nonatomic) NSMutableArray *imageViews;
 @property (nonatomic) NKJPhotoSliderControllerUsingImageType usingImageType;
 @property (nonatomic) CGPoint scrollPreviewPoint;
 @property (nonatomic) UIButton *closeButton;
@@ -70,6 +71,8 @@ typedef enum : NSUInteger {
     self.scrollInitalized = NO;
     self.closeAnimating = NO;
     self.backgroundColor = [UIColor blackColor];
+    self.imageViews = [NSMutableArray array];
+    self.currentPage = 0;
 }
 
 - (void)viewDidLoad
@@ -119,9 +122,11 @@ typedef enum : NSUInteger {
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.scrollEnabled = YES;
     [self.view addSubview:self.scrollView];
+    [self layoutScrollView];
     
     self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds) * [self imageResources].count,
                                              CGRectGetHeight(self.view.bounds) * 3.f);
+    
     
     CGFloat width = CGRectGetWidth(self.view.bounds);
     CGFloat height = CGRectGetHeight(self.view.bounds);
@@ -139,8 +144,8 @@ typedef enum : NSUInteger {
             imageView.imageView.image = (UIImage *)imageResource;
         }
         frame.origin.x += width;
+        [self.imageViews addObject:imageView];
     }
-    
     
     // Page Control
     if (self.visiblePageControl) {
@@ -208,6 +213,14 @@ typedef enum : NSUInteger {
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[pageControl]|" options:0 metrics:nil views:views]];
 }
 
+- (void)layoutScrollView
+{
+    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = @{@"scrollView": self.scrollView};
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics:nil views:views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics:nil views:views]];
+    
+}
 
 #pragma mark - UIScrollViewDelegate
 
@@ -263,7 +276,17 @@ typedef enum : NSUInteger {
         scrollView.contentOffset = contentOffset;
     }
     
+    // Save current page index.
+    NSInteger previousPage = self.pageControl.currentPage;
+    
+    // Update current page index.
     [self generateCurrentPage];
+    
+    // If page index has changed - reset zoom scale for previous image.
+    if (previousPage != self.pageControl.currentPage) {
+        NKJPhotoSliderImageView *imageView = self.imageViews[previousPage];
+        imageView.scrollView.zoomScale = imageView.scrollView.minimumZoomScale;
+    }
     
 }
 
