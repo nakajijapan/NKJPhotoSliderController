@@ -289,7 +289,7 @@ typedef enum : NSUInteger {
     
     // Update current page index.
     [self generateCurrentPage];
-    
+
 }
 
 
