@@ -21,8 +21,8 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
+		DCD552D71BAC020A00BFE15E /* Pods_NKJPhotoSliderController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCD552D61BAC020A00BFE15E /* Pods_NKJPhotoSliderController.framework */; };
 		E410EF0CBF724452119BC9E8 /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B0E70B3FD5266F9AB1AA369 /* Pods_Tests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		FC5552B2BF6248F492F3D56B /* Pods_NKJPhotoSliderController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 624C23701E388F1B9F200F1A /* Pods_NKJPhotoSliderController.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +64,8 @@
 		B710F4D59E57720CDE660D13 /* Pods-NKJPhotoSliderController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NKJPhotoSliderController.release.xcconfig"; path = "Pods/Target Support Files/Pods-NKJPhotoSliderController/Pods-NKJPhotoSliderController.release.xcconfig"; sourceTree = "<group>"; };
 		BCD2685B24EADBBB08563A71 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C031559783FFC8223752D093 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		DCD552CF1BAC018700BFE15E /* NKJPhotoSliderController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NKJPhotoSliderController.framework; path = "Pods/../build/Debug-iphoneos/NKJPhotoSliderController.framework"; sourceTree = "<group>"; };
+		DCD552D61BAC020A00BFE15E /* Pods_NKJPhotoSliderController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_NKJPhotoSliderController.framework; path = "Pods/../build/Debug-iphoneos/Pods_NKJPhotoSliderController.framework"; sourceTree = "<group>"; };
 		F2FCE46755405D42599186B0 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,10 +74,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCD552D71BAC020A00BFE15E /* Pods_NKJPhotoSliderController.framework in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				FC5552B2BF6248F492F3D56B /* Pods_NKJPhotoSliderController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +119,8 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DCD552D61BAC020A00BFE15E /* Pods_NKJPhotoSliderController.framework */,
+				DCD552CF1BAC018700BFE15E /* NKJPhotoSliderController.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
@@ -519,9 +523,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NKJPhotoSliderController/NKJPhotoSliderController-Prefix.pch";
 				INFOPLIST_FILE = "NKJPhotoSliderController/NKJPhotoSliderController-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -534,9 +543,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NKJPhotoSliderController/NKJPhotoSliderController-Prefix.pch";
 				INFOPLIST_FILE = "NKJPhotoSliderController/NKJPhotoSliderController-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
