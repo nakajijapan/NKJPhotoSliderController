@@ -415,23 +415,7 @@ typedef enum : NSUInteger {
 // Deprecated Method(from iOS8)
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    
-    // iOS7.xでのみ呼び出される
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    
-    if ((toInterfaceOrientation == UIDeviceOrientationLandscapeLeft && [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeRight) ||
-        (toInterfaceOrientation == UIDeviceOrientationLandscapeRight && [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeLeft)
-        ) {
-        // none
-    } else {
-        CGRect bounds = self.view.bounds;
-        CGSize size = self.view.bounds.size;
-        bounds.size.width = size.height;
-        bounds.size.height = size.width;
-        self.view.bounds = bounds;
-    }
-    
-    
     [self traitCollectionDidChange:nil];
 }
 
@@ -472,10 +456,7 @@ typedef enum : NSUInteger {
     }
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
-    
-    
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
-    
 }
 
 #pragma mark - NKJPhotoSliderImageViewDelegate
