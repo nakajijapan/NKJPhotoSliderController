@@ -31,8 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    
+   
     self.images = @[
                     [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image001.jpg"],
                     [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image002.jpg"],
@@ -54,11 +53,14 @@
 - (void)viewDidLayoutSubviews
 {
     if (self.collectionView != nil) {
-        [self.collectionView reloadData];
+        if (self.collectionView.collectionViewLayout != nil) {
+            [self.collectionView.collectionViewLayout invalidateLayout];
+        }
     }
 }
 
 #pragma mark - UITableViewDataSource
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -145,9 +147,18 @@
 
 #pragma mark - UIContentContainer
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+// Deprecated Method(from iOS8)
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    [self.tableView reloadData];
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    //[self traitCollectionDidChange:nil];
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    NSIndexPath *indexPath = (NSIndexPath *)[self.collectionView indexPathsForVisibleItems].firstObject;
+    self.collectionView.contentOffset = CGPointMake((CGFloat)indexPath.row * width , 0.f);
 }
 
 #pragma mark - NKJPhotoSliderControllerDelegate
