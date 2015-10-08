@@ -203,8 +203,8 @@ typedef enum : NSUInteger {
 {
     self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *views = @{@"closeButton": self.closeButton};
-    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-22-[closeButton(32@32)]" options:0 metrics:nil views:views]];
-    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:[closeButton]-22-|" options:0 metrics:nil views:views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[closeButton(52)]" options:0 metrics:nil views:views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:[closeButton(52)]|" options:0 metrics:nil views:views]];
 }
 
 - (void)layoutPageControl
