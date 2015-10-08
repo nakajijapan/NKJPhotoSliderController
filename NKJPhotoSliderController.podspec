@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "NKJPhotoSliderController"
-  s.version          = "0.5.0"
+  s.version          = "0.5.1"
   s.summary          = "NKJPhotoSliderController can a simple photo slider and delete slider with swiping."
   s.homepage         = "https://github.com/nakajijapan/NKJPhotoSliderController"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
