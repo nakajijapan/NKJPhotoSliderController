@@ -86,21 +86,6 @@ typedef enum : NSUInteger {
 {
     [super viewDidLoad];
     
-    // for iOS7
-    if ([UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortrait &&
-        [UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortraitUpsideDown) {
-        
-        CGRect bounds = [UIScreen mainScreen].bounds;
-        CGSize size = self.view.bounds.size;
-        bounds.size.width = size.height;
-        bounds.size.height = size.width;
-        self.view.bounds = bounds;
-        
-    } else {
-        self.view.frame = [UIScreen mainScreen].bounds;
-    }
-    
-    
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
     
