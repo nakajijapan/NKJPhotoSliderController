@@ -477,9 +477,38 @@ typedef enum : NSUInteger {
 - (void) photoSliderImageViewDidEndZooming:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale
 {
     if (scale <= 1.0) {
+
         self.scrollView.scrollEnabled = YES;
+        
+        [UIView animateWithDuration:0.05
+                              delay:0.f
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             
+                             self.closeButton.alpha = 1.f;
+                             if (self.visiblePageControl) {
+                                 self.pageControl.alpha = 1.f;
+                             }
+
+                         }
+                         completion:nil];
+        
     } else {
+
         self.scrollView.scrollEnabled = NO;
+        
+        [UIView animateWithDuration:0.05
+                              delay:0.f
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             
+                             self.closeButton.alpha = 0.f;
+                             if (self.visiblePageControl) {
+                                 self.pageControl.alpha = 0.f;
+                             }
+                             
+                         }
+                         completion:nil];
     }
 }
 
