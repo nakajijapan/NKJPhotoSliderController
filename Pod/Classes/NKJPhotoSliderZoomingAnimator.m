@@ -62,7 +62,7 @@
                      animations:^{
                          
                          sourceImageView.frame = [self.destinationTransition transitionDestinationImageViewFrame];
-                         sourceImageView.transform =CGAffineTransformMakeScale(1.06, 1.06);
+                         sourceImageView.transform =CGAffineTransformMakeScale(1.03, 1.03);
                          backgroundView.alpha = 0.9;
                          
                      } completion:^(BOOL finished) {
