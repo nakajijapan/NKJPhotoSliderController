@@ -22,7 +22,13 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerUsingImageTypeImage
 } NKJPhotoSliderControllerUsingImageType;
 
-@interface NKJPhotoSliderController()<UIScrollViewDelegate, NKJPhotoSliderImageViewDelegate, UIViewControllerTransitioningDelegate, ZoomingAnimationControllerTransitioning>
+@interface NKJPhotoSliderController()
+<
+    UIScrollViewDelegate,
+    NKJPhotoSliderImageViewDelegate,
+    UIViewControllerTransitioningDelegate,
+    NKJPhotoSliderZoomingAnimatedTransitioning
+>
 
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
@@ -467,7 +473,7 @@ typedef enum : NSUInteger {
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
 }
 
-#pragma mark - ZoomingAnimationControllerTransitioning
+#pragma mark - NKJPhotoSliderZoomingAnimatedTransitioning
 
 - (UIImageView *)transitionSourceImageView
 {

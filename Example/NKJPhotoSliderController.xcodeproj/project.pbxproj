@@ -23,7 +23,8 @@
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		C200B269A485A560DD74C193 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C78BF8B656F59AE8BA502C /* libPods-Tests.a */; };
-		DCF885571BB54389005F0214 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCF885561BB54389005F0214 /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
+		DCABCF031BE20748009CE11E /* ImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABCF021BE20748009CE11E /* ImageCollectionViewCell.m */; };
+		DCF885571BB54389005F0214 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCF885561BB54389005F0214 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,8 @@
 		BCD2685B24EADBBB08563A71 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C031559783FFC8223752D093 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		C4C78BF8B656F59AE8BA502C /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCABCF011BE20748009CE11E /* ImageCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCollectionViewCell.h; sourceTree = "<group>"; };
+		DCABCF021BE20748009CE11E /* ImageCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCollectionViewCell.m; sourceTree = "<group>"; };
 		DCD552CF1BAC018700BFE15E /* NKJPhotoSliderController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NKJPhotoSliderController.framework; path = "Pods/../build/Debug-iphoneos/NKJPhotoSliderController.framework"; sourceTree = "<group>"; };
 		DCD552D61BAC020A00BFE15E /* Pods_NKJPhotoSliderController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_NKJPhotoSliderController.framework; path = "Pods/../build/Debug-iphoneos/Pods_NKJPhotoSliderController.framework"; sourceTree = "<group>"; };
 		DCF885561BB54389005F0214 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -141,6 +144,8 @@
 				6003F59F195388D20070C39A /* Main_iPhone.storyboard */,
 				6003F5A5195388D20070C39A /* NKJViewController.h */,
 				6003F5A6195388D20070C39A /* NKJViewController.m */,
+				DCABCF011BE20748009CE11E /* ImageCollectionViewCell.h */,
+				DCABCF021BE20748009CE11E /* ImageCollectionViewCell.m */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
 				DCF885561BB54389005F0214 /* LaunchScreen.storyboard */,
@@ -367,6 +372,7 @@
 			files = (
 				6003F59E195388D20070C39A /* NKJAppDelegate.m in Sources */,
 				6003F5A7195388D20070C39A /* NKJViewController.m in Sources */,
+				DCABCF031BE20748009CE11E /* ImageCollectionViewCell.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

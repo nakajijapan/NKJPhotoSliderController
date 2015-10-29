@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NKJPhotoSliderZoomingAnimator.h"
 
 @class NKJPhotoSliderController;
 

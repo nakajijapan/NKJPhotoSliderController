@@ -6,9 +6,9 @@
 //
 //
 
-#import "ZoomingAnimationController.h"
+#import "NKJPhotoSliderZoomingAnimator.h"
 
-@implementation ZoomingAnimationController
+@implementation NKJPhotoSliderZoomingAnimator
 
 - (instancetype)initWithPresent:(BOOL)present
 {
