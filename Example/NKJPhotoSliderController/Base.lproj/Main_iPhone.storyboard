@@ -89,6 +89,9 @@
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <accessibility key="accessibilityConfiguration" hint="rootView" identifier="rootView" label="rootView">
+                            <bool key="isElement" value="YES"/>
+                        </accessibility>
                         <constraints>
                             <constraint firstItem="jUd-ih-uZ8" firstAttribute="top" secondItem="k0l-QV-tnf" secondAttribute="bottom" id="AYC-GY-q6U"/>
                             <constraint firstItem="jUd-ih-uZ8" firstAttribute="leading" secondItem="Poz-rR-HFy" secondAttribute="leading" id="Bke-Ee-7Bu"/>
