@@ -38,6 +38,16 @@
                ReferencedContainer = "container:NKJPhotoSliderController.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DCABCF071BE22AF0009CE11E"
+               BuildableName = "NKJPhotoSliderControllerUITests.xctest"
+               BlueprintName = "NKJPhotoSliderControllerUITests"
+               ReferencedContainer = "container:NKJPhotoSliderController.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

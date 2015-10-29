@@ -113,6 +113,7 @@ typedef enum : NSUInteger {
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.scrollEnabled = YES;
+    self.scrollView.accessibilityLabel = @"NKJPhotoSliderScrollView";
     [self.view addSubview:self.scrollView];
     [self layoutScrollView];
     
