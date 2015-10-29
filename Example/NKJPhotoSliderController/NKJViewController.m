@@ -25,7 +25,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) UICollectionView *collectionView;
-@property (weak, nonatomic) NSIndexPath *selectedIndexPath;
 
 @property NSArray *images;
 @end
