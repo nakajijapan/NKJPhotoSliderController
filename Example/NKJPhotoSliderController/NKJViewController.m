@@ -25,7 +25,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) UICollectionView *collectionView;
-@property (weak, nonatomic) NSIndexPath *selectedIndexPath;
 
 @property NSArray *images;
 @end
@@ -230,7 +229,8 @@
 
 - (void)photoSliderControllerWillDismiss:(NKJPhotoSliderController *)viewController
 {
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: viewController.currentPage inSection:0];
+    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition: UICollectionViewScrollPositionNone animated:NO];
 }
 
 @end
