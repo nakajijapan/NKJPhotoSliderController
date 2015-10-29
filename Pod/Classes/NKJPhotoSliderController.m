@@ -467,6 +467,19 @@ typedef enum : NSUInteger {
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
 }
 
+#pragma mark - ZoomingAnimationControllerTransitioning
+
+- (UIImageView *)transitionSourceImageView
+{
+    NKJPhotoSliderImageView *zoomingImageView = self.imageViews[self.currentPage];
+    return zoomingImageView.imageView;
+}
+
+- (CGRect)transitionDestinationImageViewFrame
+{
+    return self.view.frame;
+}
+
 #pragma mark - NKJPhotoSliderImageViewDelegate
 
 - (void) photoSliderImageViewDidEndZooming:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale
