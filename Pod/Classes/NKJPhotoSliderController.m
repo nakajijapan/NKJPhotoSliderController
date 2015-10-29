@@ -87,7 +87,6 @@ typedef enum : NSUInteger {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
-    self.view.userInteractionEnabled = YES;
     
     self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.backgroundView.backgroundColor = self.backgroundColor;
@@ -135,6 +134,7 @@ typedef enum : NSUInteger {
             [imageView loadImage:(NSURL *)imageResource];
         } else {
             imageView.imageView.image = (UIImage *)imageResource;
+            [imageView setImage:(UIImage *)imageResource];
         }
         frame.origin.x += width;
         imageView.delegate = self;
@@ -178,16 +178,6 @@ typedef enum : NSUInteger {
     self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * self.currentPage, CGRectGetHeight(self.scrollView.bounds));
     self.scrollInitalized = YES;
 }
-
-#pragma mark - Touch Events
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.view removeFromSuperview];
-    }];
-}
-
 
 #pragma mark - Constraints
 
@@ -453,6 +443,7 @@ typedef enum : NSUInteger {
         imageView.frame = frame;
         frame.origin.x += contentViewBounds.size.width;
         imageView.scrollView.frame = contentViewBounds;
+        [imageView layoutImageView];
     }
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
