@@ -87,7 +87,6 @@ typedef enum : NSUInteger {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
-    self.view.userInteractionEnabled = YES;
     
     self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.backgroundView.backgroundColor = self.backgroundColor;
@@ -178,16 +177,6 @@ typedef enum : NSUInteger {
     self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * self.currentPage, CGRectGetHeight(self.scrollView.bounds));
     self.scrollInitalized = YES;
 }
-
-#pragma mark - Touch Events
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.view removeFromSuperview];
-    }];
-}
-
 
 #pragma mark - Constraints
 
