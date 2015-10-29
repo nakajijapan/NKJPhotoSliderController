@@ -22,7 +22,13 @@ typedef enum : NSUInteger {
     NKJPhotoSliderControllerUsingImageTypeImage
 } NKJPhotoSliderControllerUsingImageType;
 
-@interface NKJPhotoSliderController()<UIScrollViewDelegate, NKJPhotoSliderImageViewDelegate>
+@interface NKJPhotoSliderController()
+<
+    UIScrollViewDelegate,
+    NKJPhotoSliderImageViewDelegate,
+    UIViewControllerTransitioningDelegate,
+    NKJPhotoSliderZoomingAnimatedTransitioning
+>
 
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSArray *imageURLs;
@@ -80,21 +86,6 @@ typedef enum : NSUInteger {
 {
     [super viewDidLoad];
     
-    // for iOS7
-    if ([UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortrait &&
-        [UIApplication sharedApplication].statusBarOrientation != UIDeviceOrientationPortraitUpsideDown) {
-        
-        CGRect bounds = [UIScreen mainScreen].bounds;
-        CGSize size = self.view.bounds.size;
-        bounds.size.width = size.height;
-        bounds.size.height = size.width;
-        self.view.bounds = bounds;
-        
-    } else {
-        self.view.frame = [UIScreen mainScreen].bounds;
-    }
-    
-    
     self.view.backgroundColor = [UIColor clearColor];
     self.view.userInteractionEnabled = YES;
     
@@ -122,6 +113,7 @@ typedef enum : NSUInteger {
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.scrollEnabled = YES;
+    self.scrollView.accessibilityLabel = @"NKJPhotoSliderScrollView";
     [self.view addSubview:self.scrollView];
     [self layoutScrollView];
     
@@ -465,6 +457,19 @@ typedef enum : NSUInteger {
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
     self.scrollMode = NKJPhotoSliderControllerScrollModeNone;
+}
+
+#pragma mark - NKJPhotoSliderZoomingAnimatedTransitioning
+
+- (UIImageView *)transitionSourceImageView
+{
+    NKJPhotoSliderImageView *zoomingImageView = self.imageViews[self.currentPage];
+    return zoomingImageView.imageView;
+}
+
+- (CGRect)transitionDestinationImageViewFrame
+{
+    return self.view.frame;
 }
 
 #pragma mark - NKJPhotoSliderImageViewDelegate

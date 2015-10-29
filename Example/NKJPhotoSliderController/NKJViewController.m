@@ -7,8 +7,9 @@
 //
 
 #import "NKJViewController.h"
-#import "NKJPhotoSliderController.h"
+#import <NKJPhotoSliderController.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "ImageCollectionViewCell.h"
 
 @interface NKJViewController ()
 <
@@ -17,11 +18,14 @@
     UICollectionViewDelegate,
     UICollectionViewDataSource,
     UICollectionViewDelegateFlowLayout,
-    NKJPhotoSliderControllerDelegate
+    NKJPhotoSliderControllerDelegate,
+    UIViewControllerTransitioningDelegate,
+    NKJPhotoSliderZoomingAnimatedTransitioning
 >
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) UICollectionView *collectionView;
+@property (weak, nonatomic) NSIndexPath *selectedIndexPath;
 
 @property NSArray *images;
 @end
@@ -52,6 +56,9 @@
 
 - (void)viewDidLayoutSubviews
 {
+    [super viewDidLayoutSubviews];
+    
+    
     if (self.collectionView != nil) {
         if (self.collectionView.collectionViewLayout != nil) {
             [self.collectionView.collectionViewLayout invalidateLayout];
@@ -112,7 +119,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"hcell" forIndexPath:indexPath];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"hcell" forIndexPath:indexPath];
     
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:1];
     [imageView sd_setImageWithURL:self.images[indexPath.row]];
@@ -126,13 +133,15 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NKJPhotoSliderController *photoSlider = [[NKJPhotoSliderController alloc] initWithImageURLs:self.images];
-    photoSlider.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    photoSlider.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //photoSlider.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    //photoSlider.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     photoSlider.delegate = self;
+    photoSlider.transitioningDelegate = self;
     photoSlider.currentPage = indexPath.row;
     
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-    [self presentViewController:photoSlider animated:YES completion:nil];
+    [self presentViewController:photoSlider animated:YES completion:^{
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    }];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -143,7 +152,58 @@
     } else {
         return CGSizeMake(self.tableView.bounds.size.width, collectionView.bounds.size.height);
     }
+
 }
+
+#pragma mark - NKJPhotoSliderZoomingAnimatedTransitioning
+
+- (UIImageView *)transitionSourceImageView
+{
+    NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage: cell.imageView.image];
+    
+    CGRect frame = cell.imageView.frame;
+    frame.origin.y += 20;
+    
+    imageView.frame = frame;
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    imageView.clipsToBounds = YES;
+    //imageView.userInteractionEnabled = false
+    
+    return imageView;
+}
+
+- (CGRect)transitionDestinationImageViewFrame
+{
+    NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+
+    CGRect frame = cell.imageView.frame;
+    frame.origin.y += 20.f;
+    
+    return frame;
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:true];
+    animationController.sourceTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)source;
+    animationController.destinationTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)presented;
+    return animationController;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:false];
+    animationController.sourceTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)dismissed;
+    animationController.destinationTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)self;
+    return animationController;
+}
+
 
 #pragma mark - UIContentContainer
 
@@ -154,12 +214,17 @@
     //[self traitCollectionDidChange:nil];
 }
 
+#pragma mark - UITraitEnvironment
+
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
-    CGFloat width = CGRectGetWidth(self.view.bounds);
-    NSIndexPath *indexPath = (NSIndexPath *)[self.collectionView indexPathsForVisibleItems].firstObject;
-    self.collectionView.contentOffset = CGPointMake((CGFloat)indexPath.row * width , 0.f);
+    if (self.collectionView != nil) {
+        CGFloat width = CGRectGetWidth(self.view.bounds);
+        NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
+        self.collectionView.contentOffset = CGPointMake((CGFloat)indexPath.row * width , 0.f);
+    }
 }
+
 
 #pragma mark - NKJPhotoSliderControllerDelegate
 
