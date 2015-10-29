@@ -15,7 +15,9 @@
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) id<NKJPhotoSliderImageViewDelegate> delegate;
 - (void)loadImage:(NSURL *)imageURL;
-
+- (void)setImage:(UIImage *)image;
+- (void)layoutImageView:(UIImage *)image;
+- (void)layoutImageView;
 @end
 
 @protocol NKJPhotoSliderImageViewDelegate <NSObject>

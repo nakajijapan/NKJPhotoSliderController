@@ -52,7 +52,7 @@
     self.scrollView.delegate = self;
     
     // image
-    self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.userInteractionEnabled = true;
 
@@ -78,6 +78,35 @@
                                       UIViewAutoresizingFlexibleBottomMargin;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGSize boundsSize = self.bounds.size;
+    CGRect frameToCenter = self.imageView.frame;
+    
+     // Horizontally
+    if (frameToCenter.size.width < boundsSize.width) {
+        frameToCenter.origin.x = floor((boundsSize.width - frameToCenter.size.width) / 2.f);
+    } else {
+        frameToCenter.origin.x = 0.f;
+    }
+    
+         // Vertically
+    if (frameToCenter.size.height < boundsSize.height) {
+        frameToCenter.origin.y = floor((boundsSize.height - frameToCenter.size.height) / 2.f);
+    } else {
+        frameToCenter.origin.y = 0.f;
+    }
+    
+    // Center
+    if (!CGRectEqualToRect(self.imageView.frame, frameToCenter)) {
+        self.imageView.frame = frameToCenter;
+    }
+
+}
+
+
 - (void)loadImage:(NSURL *)imageURL
 {
     self.progressView.hidden = NO;
@@ -90,7 +119,48 @@
                                                      }
                                                     completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                                                         self.progressView.hidden = YES;
+                                                        
+                                                        if (error == nil) {
+                                                            [self layoutImageView:image];
+                                                        }
                                                     }];
+}
+
+- (void)setImage:(UIImage *)image
+{
+    [self layoutImageView:image];
+}
+
+- (void)layoutImageView:(UIImage *)image
+{
+    
+    CGRect frame = CGRectZero;
+    frame.origin = CGPointZero;
+    
+    CGFloat height = image.size.height * (self.bounds.size.width / image.size.width);
+    CGFloat width = image.size.width * (self.bounds.size.height / image.size.height);
+    
+    if (image.size.width > image.size.height) {
+        frame.size = CGSizeMake(self.bounds.size.width, height);
+        if (height >= self.bounds.size.height) {
+            frame.size = CGSizeMake(width, self.bounds.size.height);
+        }
+    } else {
+        frame.size = CGSizeMake(width, self.bounds.size.height);
+        if (width >= self.bounds.size.width) {
+            frame.size = CGSizeMake(self.bounds.size.width, height);
+        }
+    }
+    
+    self.imageView.frame = frame;
+    self.imageView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+}
+
+- (void)layoutImageView
+{
+    if (self.imageView.image) {
+        [self layoutImageView:self.imageView.image];
+    }
 }
 
 - (void)didDoubleTap:(UIGestureRecognizer *)sender
@@ -98,12 +168,13 @@
     CGFloat scale = 0.0;
     if (self.scrollView.zoomScale == 1.0) {
         scale = 2.f;
+        
+        CGPoint touchPoint = [sender locationInView:self];
+        [self.scrollView zoomToRect:CGRectMake(touchPoint.x, touchPoint.y, 1.f, 1.f) animated:YES];
+        
     } else {
-        scale = 1.f;
+        [self.scrollView setZoomScale:0.f animated:YES];
     }
-
-    [self.scrollView setZoomScale:scale animated:YES];
-
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -111,6 +182,12 @@
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
     return self.imageView;
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale

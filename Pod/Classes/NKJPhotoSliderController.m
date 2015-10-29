@@ -134,6 +134,7 @@ typedef enum : NSUInteger {
             [imageView loadImage:(NSURL *)imageResource];
         } else {
             imageView.imageView.image = (UIImage *)imageResource;
+            [imageView setImage:(UIImage *)imageResource];
         }
         frame.origin.x += width;
         imageView.delegate = self;
@@ -442,6 +443,7 @@ typedef enum : NSUInteger {
         imageView.frame = frame;
         frame.origin.x += contentViewBounds.size.width;
         imageView.scrollView.frame = contentViewBounds;
+        [imageView layoutImageView];
     }
     
     self.scrollView.contentOffset = CGPointMake((CGFloat)self.currentPage * CGRectGetWidth(contentViewBounds), height);
