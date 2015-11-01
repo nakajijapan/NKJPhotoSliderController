@@ -61,7 +61,7 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          
-                         sourceImageView.frame = [self.destinationTransition transitionDestinationImageViewFrame];
+                         sourceImageView.frame = [self.destinationTransition transitionDestinationImageViewFrameWithSourceImageView:sourceImageView];
                          sourceImageView.transform =CGAffineTransformMakeScale(1.03, 1.03);
                          backgroundView.alpha = 0.9;
                          
@@ -111,7 +111,7 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          
-                         sourceImageView.frame = [self.destinationTransition transitionDestinationImageViewFrame];
+                         sourceImageView.frame = [self.destinationTransition transitionDestinationImageViewFrameWithSourceImageView:sourceImageView];
                          fromViewController.view.alpha = 0.1f;
                          
                      }

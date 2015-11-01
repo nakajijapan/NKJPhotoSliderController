@@ -458,9 +458,16 @@ typedef enum : NSUInteger {
     return zoomingImageView.imageView;
 }
 
-- (CGRect)transitionDestinationImageViewFrame
+- (CGRect)transitionDestinationImageViewFrameWithSourceImageView:(UIImageView *)sourceImageView
 {
-    return self.view.frame;
+    CGFloat height = (sourceImageView.image.size.height * sourceImageView.bounds.size.width) / sourceImageView.image.size.width;
+    
+    CGRect frame = CGRectMake(
+                              self.view.frame.size.width * 0.5 - CGRectGetWidth(sourceImageView.bounds) * 0.5,
+                              self.view.frame.size.height * 0.5 - height * 0.5,
+                              CGRectGetWidth(sourceImageView.bounds),
+                              height);
+    return frame;
 }
 
 #pragma mark - NKJPhotoSliderImageViewDelegate

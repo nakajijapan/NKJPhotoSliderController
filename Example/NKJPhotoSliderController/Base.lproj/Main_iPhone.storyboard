@@ -47,7 +47,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
-                                                                    <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HCI-3W-y4o">
+                                                                    <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HCI-3W-y4o">
                                                                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                                                                         <animations/>
                                                                     </imageView>

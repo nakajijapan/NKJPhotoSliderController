@@ -166,22 +166,20 @@
     frame.origin.y += 20;
     
     imageView.frame = frame;
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-    
-    imageView.clipsToBounds = YES;
-    //imageView.userInteractionEnabled = false
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
     
     return imageView;
 }
 
-- (CGRect)transitionDestinationImageViewFrame
+- (CGRect)transitionDestinationImageViewFrameWithSourceImageView:(UIImageView *)sourceImageView
 {
     NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
 
-    CGRect frame = cell.imageView.frame;
-    frame.origin.y += 20.f;
-    
+    CGFloat width = (sourceImageView.image.size.width * sourceImageView.bounds.size.width) / sourceImageView.image.size.height;
+    CGFloat x = width * 0.5 - CGRectGetWidth(cell.imageView.bounds) * 0.5;
+    CGRect frame = CGRectMake(- x, 0.f, width, CGRectGetHeight(cell.imageView.bounds));
+
     return frame;
 }
 
