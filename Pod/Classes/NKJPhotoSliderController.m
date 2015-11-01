@@ -461,13 +461,10 @@ typedef enum : NSUInteger {
 - (void)transitionDestinationImageView:(UIImageView *)sourceImageView
 {
     CGFloat height = (sourceImageView.image.size.height * sourceImageView.bounds.size.width) / sourceImageView.image.size.width;
+    CGRect frame = CGRectMake(0.f, 0.f, CGRectGetWidth(sourceImageView.bounds), height);
     
-    CGRect frame = CGRectMake(
-                              self.view.frame.size.width * 0.5 - CGRectGetWidth(sourceImageView.bounds) * 0.5,
-                              self.view.frame.size.height * 0.5 - height * 0.5,
-                              CGRectGetWidth(sourceImageView.bounds),
-                              height);
     sourceImageView.frame = frame;
+    sourceImageView.center = CGPointMake(CGRectGetWidth(self.view.frame) * 0.5f, CGRectGetHeight(self.view.frame) * 0.5f);
 }
 
 #pragma mark - NKJPhotoSliderImageViewDelegate
