@@ -62,33 +62,17 @@
                      animations:^{
                          
                          sourceImageView.frame = [self.destinationTransition transitionDestinationImageViewFrameWithSourceImageView:sourceImageView];
-                         sourceImageView.transform =CGAffineTransformMakeScale(1.03, 1.03);
-                         backgroundView.alpha = 0.9;
+                         backgroundView.alpha = 1.f;
                          
                      } completion:^(BOOL finished) {
                         
-                         [UIView animateWithDuration:0.06
-                                               delay:0.f
-                                             options:UIViewAnimationOptionCurveEaseOut
-                                          animations:^{
-                                             
-                                              sourceImageView.transform = CGAffineTransformIdentity;
-                                              snapshotView.frame = fromViewController.view.frame;
-
-                                              backgroundView.alpha = 1.f;
-
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                              sourceImageView.alpha = 0.f;
-                                              [sourceImageView removeFromSuperview];
-                                              
-                                              toViewController.view.alpha = 1.f;
-                                              [backgroundView removeFromSuperview];
-                                              
-                                              [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-                                              
-                                          }];
+                         sourceImageView.alpha = 0.f;
+                         [sourceImageView removeFromSuperview];
+                         
+                         toViewController.view.alpha = 1.f;
+                         [backgroundView removeFromSuperview];
+                         
+                         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
                          
                      }];
     
