@@ -166,30 +166,36 @@
     frame.origin.y += 20;
     
     imageView.frame = frame;
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-    
     imageView.clipsToBounds = YES;
-    //imageView.userInteractionEnabled = false
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
     
     return imageView;
 }
 
-- (CGRect)transitionDestinationImageViewFrame
+- (void)transitionDestinationImageView:(UIImageView *)sourceImageView
 {
     NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
 
-    CGRect frame = cell.imageView.frame;
-    frame.origin.y += 20.f;
+    CGRect frame = CGRectZero;
+    if (sourceImageView.image.size.height < sourceImageView.image.size.width) {
+        CGFloat width = (sourceImageView.image.size.width * sourceImageView.bounds.size.width) / sourceImageView.image.size.height;
+        CGFloat x = width * 0.5 - CGRectGetWidth(cell.imageView.bounds) * 0.5;
+        frame = CGRectMake(- x, 0.f, width, CGRectGetHeight(cell.imageView.bounds));
+        
+    } else {
+        frame = CGRectMake(0.f, 0.f, CGRectGetWidth(cell.imageView.bounds), CGRectGetHeight(cell.imageView.bounds));
+    }
     
-    return frame;
+    sourceImageView.frame = frame;
+
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:true];
+    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:YES];
     animationController.sourceTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)source;
     animationController.destinationTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)presented;
     return animationController;
@@ -197,7 +203,7 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:false];
+    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:NO];
     animationController.sourceTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)dismissed;
     animationController.destinationTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)self;
     return animationController;

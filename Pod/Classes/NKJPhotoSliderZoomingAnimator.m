@@ -61,34 +61,18 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          
-                         sourceImageView.frame = [self.destinationTransition transitionDestinationImageViewFrame];
-                         sourceImageView.transform =CGAffineTransformMakeScale(1.03, 1.03);
-                         backgroundView.alpha = 0.9;
+                         [self.destinationTransition transitionDestinationImageView:sourceImageView];
+                         backgroundView.alpha = 1.f;
                          
                      } completion:^(BOOL finished) {
                         
-                         [UIView animateWithDuration:0.06
-                                               delay:0.f
-                                             options:UIViewAnimationOptionCurveEaseOut
-                                          animations:^{
-                                             
-                                              sourceImageView.transform = CGAffineTransformIdentity;
-                                              snapshotView.frame = fromViewController.view.frame;
-
-                                              backgroundView.alpha = 1.f;
-
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                              sourceImageView.alpha = 0.f;
-                                              [sourceImageView removeFromSuperview];
-                                              
-                                              toViewController.view.alpha = 1.f;
-                                              [backgroundView removeFromSuperview];
-                                              
-                                              [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-                                              
-                                          }];
+                         sourceImageView.alpha = 0.f;
+                         [sourceImageView removeFromSuperview];
+                         
+                         toViewController.view.alpha = 1.f;
+                         [backgroundView removeFromSuperview];
+                         
+                         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
                          
                      }];
     
@@ -111,26 +95,18 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          
-                         sourceImageView.frame = [self.destinationTransition transitionDestinationImageViewFrame];
+                         [self.destinationTransition transitionDestinationImageView:sourceImageView];
                          fromViewController.view.alpha = 0.1f;
                          
                      }
                      completion:^(BOOL finished) {
                          
-                         [UIView animateWithDuration:0.06
-                                               delay:0.f
-                                             options:UIViewAnimationOptionCurveEaseOut
-                                          animations:^{
-                                              
-                                              sourceImageView.alpha = 0.f;
-                                              fromViewController.view.alpha = 0.f;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                              [sourceImageView removeFromSuperview];
-                                              [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-                                              
-                                          }];
+                         sourceImageView.alpha = 0.f;
+                         fromViewController.view.alpha = 0.f;
+                         
+                         [sourceImageView removeFromSuperview];
+                         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+
                      }];
     
 }

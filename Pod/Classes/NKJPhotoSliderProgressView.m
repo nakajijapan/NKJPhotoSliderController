@@ -41,7 +41,7 @@
                                                              radius:20
                                                          startAngle:startAngle
                                                            endAngle:endAngle
-                                                          clockwise:true].CGPath;
+                                                          clockwise:YES].CGPath;
     self.progressLayer.backgroundColor = [UIColor clearColor].CGColor;
     self.progressLayer.fillColor = [UIColor clearColor].CGColor;
     self.progressLayer.strokeColor = [UIColor colorWithRed:1.f green:1.f blue:1.f alpha:.2].CGColor;
@@ -62,7 +62,7 @@
                                                              radius:20
                                                          startAngle:startAngle
                                                            endAngle:endAngle
-                                                          clockwise:true].CGPath;
+                                                          clockwise:YES].CGPath;
     self.progressLayer.backgroundColor = [UIColor clearColor].CGColor;
     self.progressLayer.fillColor = [UIColor clearColor].CGColor;
     self.progressLayer.strokeColor = [UIColor whiteColor].CGColor;

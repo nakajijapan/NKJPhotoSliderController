@@ -44,19 +44,19 @@
     
     // for zoom
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-    self.scrollView.showsHorizontalScrollIndicator = false;
-    self.scrollView.showsVerticalScrollIndicator = false;
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.minimumZoomScale = 1.0;
     self.scrollView.maximumZoomScale = 3.0;
-    self.scrollView.bounces = true;
+    self.scrollView.bounces = YES;
     self.scrollView.delegate = self;
     
     // image
     self.imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.imageView.userInteractionEnabled = true;
+    self.imageView.userInteractionEnabled = YES;
 
-    self.userInteractionEnabled = true;
+    self.userInteractionEnabled = YES;
     [self addSubview:self.scrollView];
     [self.scrollView addSubview:self.imageView];
     

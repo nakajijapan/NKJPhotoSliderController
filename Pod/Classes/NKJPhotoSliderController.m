@@ -108,7 +108,7 @@ typedef enum : NSUInteger {
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.delegate = self;
-    self.scrollView.clipsToBounds = false;
+    self.scrollView.clipsToBounds = NO;
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.scrollEnabled = YES;
@@ -146,7 +146,7 @@ typedef enum : NSUInteger {
         self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
         self.pageControl.numberOfPages = [self imageResources].count;
         self.pageControl.currentPage = 0;
-        self.pageControl.userInteractionEnabled = false;
+        self.pageControl.userInteractionEnabled = NO;
         [self.view addSubview:self.pageControl];
         [self layoutPageControl];
     }
@@ -455,12 +455,21 @@ typedef enum : NSUInteger {
 - (UIImageView *)transitionSourceImageView
 {
     NKJPhotoSliderImageView *zoomingImageView = self.imageViews[self.currentPage];
+    zoomingImageView.imageView.clipsToBounds = YES;
+    zoomingImageView.imageView.contentMode = UIViewContentModeScaleAspectFill;
+
     return zoomingImageView.imageView;
 }
 
-- (CGRect)transitionDestinationImageViewFrame
+- (void)transitionDestinationImageView:(UIImageView *)sourceImageView
 {
-    return self.view.frame;
+    CGRect frame = CGRectZero;
+
+    CGFloat height = (sourceImageView.image.size.height * sourceImageView.bounds.size.width) / sourceImageView.image.size.width;
+    frame = CGRectMake(0.f, 0.f, CGRectGetWidth(sourceImageView.bounds), height);
+
+    sourceImageView.frame = frame;
+    sourceImageView.center = CGPointMake(CGRectGetWidth(self.view.frame) * 0.5f, CGRectGetHeight(self.view.frame) * 0.5f);
 }
 
 #pragma mark - NKJPhotoSliderImageViewDelegate
