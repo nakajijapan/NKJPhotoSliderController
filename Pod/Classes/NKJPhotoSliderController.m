@@ -465,10 +465,14 @@ typedef enum : NSUInteger {
 {
     CGRect frame = CGRectZero;
 
-    CGFloat height = (sourceImageView.image.size.height * sourceImageView.bounds.size.width) / sourceImageView.image.size.width;
-    frame = CGRectMake(0.f, 0.f, CGRectGetWidth(sourceImageView.bounds), height);
+    if (sourceImageView.image != nil) {
 
-    sourceImageView.frame = frame;
+        CGFloat height = (sourceImageView.image.size.height * sourceImageView.bounds.size.width) / sourceImageView.image.size.width;
+        frame = CGRectMake(0.f, 0.f, CGRectGetWidth(sourceImageView.bounds), height);
+        sourceImageView.frame = frame;
+
+    }
+
     sourceImageView.center = CGPointMake(CGRectGetWidth(self.view.frame) * 0.5f, CGRectGetHeight(self.view.frame) * 0.5f);
 }
 
