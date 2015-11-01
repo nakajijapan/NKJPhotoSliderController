@@ -101,20 +101,12 @@
                      }
                      completion:^(BOOL finished) {
                          
-                         [UIView animateWithDuration:0.06
-                                               delay:0.f
-                                             options:UIViewAnimationOptionCurveEaseOut
-                                          animations:^{
-                                              
-                                              sourceImageView.alpha = 0.f;
-                                              fromViewController.view.alpha = 0.f;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                              [sourceImageView removeFromSuperview];
-                                              [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-                                              
-                                          }];
+                         sourceImageView.alpha = 0.f;
+                         fromViewController.view.alpha = 0.f;
+                         
+                         [sourceImageView removeFromSuperview];
+                         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+
                      }];
     
 }
