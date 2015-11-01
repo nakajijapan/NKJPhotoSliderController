@@ -108,7 +108,7 @@ typedef enum : NSUInteger {
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.delegate = self;
-    self.scrollView.clipsToBounds = false;
+    self.scrollView.clipsToBounds = NO;
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.scrollEnabled = YES;
@@ -146,7 +146,7 @@ typedef enum : NSUInteger {
         self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
         self.pageControl.numberOfPages = [self imageResources].count;
         self.pageControl.currentPage = 0;
-        self.pageControl.userInteractionEnabled = false;
+        self.pageControl.userInteractionEnabled = NO;
         [self.view addSubview:self.pageControl];
         [self layoutPageControl];
     }

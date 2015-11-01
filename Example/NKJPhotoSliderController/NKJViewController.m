@@ -187,7 +187,7 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:true];
+    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:YES];
     animationController.sourceTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)source;
     animationController.destinationTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)presented;
     return animationController;
@@ -195,7 +195,7 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:false];
+    NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:NO];
     animationController.sourceTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)dismissed;
     animationController.destinationTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)self;
     return animationController;
