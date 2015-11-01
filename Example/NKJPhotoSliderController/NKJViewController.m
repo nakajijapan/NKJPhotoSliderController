@@ -166,6 +166,7 @@
     frame.origin.y += 20;
     
     imageView.frame = frame;
+    imageView.clipsToBounds = YES;
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     
     return imageView;
@@ -176,9 +177,16 @@
     NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
 
-    CGFloat width = (sourceImageView.image.size.width * sourceImageView.bounds.size.width) / sourceImageView.image.size.height;
-    CGFloat x = width * 0.5 - CGRectGetWidth(cell.imageView.bounds) * 0.5;
-    CGRect frame = CGRectMake(- x, 0.f, width, CGRectGetHeight(cell.imageView.bounds));
+    CGRect frame = CGRectZero;
+    if (sourceImageView.image.size.height < sourceImageView.image.size.width) {
+        CGFloat width = (sourceImageView.image.size.width * sourceImageView.bounds.size.width) / sourceImageView.image.size.height;
+        CGFloat x = width * 0.5 - CGRectGetWidth(cell.imageView.bounds) * 0.5;
+        frame = CGRectMake(- x, 0.f, width, CGRectGetHeight(cell.imageView.bounds));
+        
+    } else {
+        frame = CGRectMake(0.f, 0.f, CGRectGetWidth(cell.imageView.bounds), CGRectGetHeight(cell.imageView.bounds));
+    }
+    
     sourceImageView.frame = frame;
 
 }

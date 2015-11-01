@@ -455,14 +455,19 @@ typedef enum : NSUInteger {
 - (UIImageView *)transitionSourceImageView
 {
     NKJPhotoSliderImageView *zoomingImageView = self.imageViews[self.currentPage];
+    zoomingImageView.imageView.clipsToBounds = YES;
+    zoomingImageView.imageView.contentMode = UIViewContentModeScaleAspectFill;
+
     return zoomingImageView.imageView;
 }
 
 - (void)transitionDestinationImageView:(UIImageView *)sourceImageView
 {
+    CGRect frame = CGRectZero;
+
     CGFloat height = (sourceImageView.image.size.height * sourceImageView.bounds.size.width) / sourceImageView.image.size.width;
-    CGRect frame = CGRectMake(0.f, 0.f, CGRectGetWidth(sourceImageView.bounds), height);
-    
+    frame = CGRectMake(0.f, 0.f, CGRectGetWidth(sourceImageView.bounds), height);
+
     sourceImageView.frame = frame;
     sourceImageView.center = CGPointMake(CGRectGetWidth(self.view.frame) * 0.5f, CGRectGetHeight(self.view.frame) * 0.5f);
 }
