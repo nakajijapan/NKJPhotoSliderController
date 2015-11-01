@@ -171,7 +171,7 @@
     return imageView;
 }
 
-- (CGRect)transitionDestinationImageViewFrameWithSourceImageView:(UIImageView *)sourceImageView
+- (void)transitionDestinationImageView:(UIImageView *)sourceImageView
 {
     NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
@@ -179,8 +179,8 @@
     CGFloat width = (sourceImageView.image.size.width * sourceImageView.bounds.size.width) / sourceImageView.image.size.height;
     CGFloat x = width * 0.5 - CGRectGetWidth(cell.imageView.bounds) * 0.5;
     CGRect frame = CGRectMake(- x, 0.f, width, CGRectGetHeight(cell.imageView.bounds));
+    sourceImageView.frame = frame;
 
-    return frame;
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate

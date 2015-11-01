@@ -11,7 +11,7 @@
 @protocol NKJPhotoSliderZoomingAnimatedTransitioning <NSObject>
 
 - (UIImageView *)transitionSourceImageView;
-- (CGRect)transitionDestinationImageViewFrameWithSourceImageView:(UIImageView *)sourceImageView;
+- (void)transitionDestinationImageView:(UIImageView *)sourceImageView;
 
 @end
 
