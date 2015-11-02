@@ -251,9 +251,7 @@
             
             CGPoint velocity = [gesture velocityInView:self];
             
-            BOOL velocityThresholdReached = fabs(velocity.x) > 400 || fabs(velocity.y) > 400;
-            
-            if (velocityThresholdReached) {
+            if (fabs(velocity.x) > 400 || fabs(velocity.y) > 400) {
                 
                 [self.animator removeBehavior:self.panAttachment];
                 
@@ -265,9 +263,7 @@
                 
                 self.pushBehavior.action = ^{
                     
-                    BOOL viewOutOfFrame = !CGRectIntersectsRect(weakSelf.imageView.frame, weakSelf.bounds);
-                    //BOOL viewOutOfFrame = !CGRectIntersectsRect(weakSelf.frame, weakSelf.superview.bounds);
-                    if (viewOutOfFrame) {
+                    if (!CGRectIntersectsRect(weakSelf.imageView.frame, weakSelf.bounds)) {
                         [weakSelf.animator removeAllBehaviors];
                     }
 
