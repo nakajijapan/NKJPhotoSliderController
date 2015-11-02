@@ -210,6 +210,10 @@
 
 - (void)gestureRecognizerDidPan:(UIPanGestureRecognizer *)gesture
 {
+    if ([self.scrollView isZooming]) {
+        return;
+    }
+
     CGPoint location = [gesture locationInView:self];
     
     switch (gesture.state) {
