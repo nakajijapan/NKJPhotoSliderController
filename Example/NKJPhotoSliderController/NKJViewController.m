@@ -217,6 +217,12 @@
     NKJPhotoSliderZoomingAnimator *animationController = [[NKJPhotoSliderZoomingAnimator alloc] initWithPresent:NO];
     animationController.sourceTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)dismissed;
     animationController.destinationTransition = (id<NKJPhotoSliderZoomingAnimatedTransitioning>)self;
+
+    // for orientation
+    if ([self respondsToSelector:@selector(animationControllerForDismissedController:)]) {
+        self.view.frame = dismissed.view.bounds;
+    }
+
     return animationController;
 }
 
@@ -240,7 +246,6 @@
         self.collectionView.contentOffset = CGPointMake((CGFloat)indexPath.row * width , 0.f);
     }
 }
-
 
 #pragma mark - NKJPhotoSliderControllerDelegate
 
