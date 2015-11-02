@@ -12,6 +12,9 @@
 
 @interface NKJPhotoSliderImageView () <UIScrollViewDelegate>
 @property (nonatomic) NKJPhotoSliderProgressView *progressView;
+@property (nonatomic) UIDynamicAnimator *animator;
+@property (nonatomic) UIAttachmentBehavior *panAttachment;
+@property (nonatomic) UIPushBehavior *pushBehavior;
 @end
 
 @implementation NKJPhotoSliderImageView
@@ -76,6 +79,12 @@
                                       UIViewAutoresizingFlexibleTopMargin |
                                       UIViewAutoresizingFlexibleHeight |
                                       UIViewAutoresizingFlexibleBottomMargin;
+    
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                                 action:@selector(gestureRecognizerDidPan:)];
+    [self.imageView addGestureRecognizer:panGesture];
+    self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
 }
 
 - (void)layoutSubviews
@@ -196,5 +205,88 @@
         [self.delegate photoSliderImageViewDidEndZooming:self atScale:scale];
     }
 }
+
+#pragma mark - UIGestureRecognizer
+
+- (void)gestureRecognizerDidPan:(UIPanGestureRecognizer *)gesture
+{
+    CGPoint location = [gesture locationInView:self];
+    
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan: {
+            
+            [self.animator removeAllBehaviors];
+            
+            UIDynamicItemBehavior *rotationBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.imageView]];
+            rotationBehavior.allowsRotation = YES;
+            rotationBehavior.angularResistance = 10.0f;
+            [self.animator addBehavior:rotationBehavior];
+            
+            CGPoint viewCenter = self.imageView.center;
+            UIOffset centerOffset = UIOffsetMake(location.x - viewCenter.x, location.y - viewCenter.y);
+            
+            self.panAttachment = [[UIAttachmentBehavior alloc] initWithItem:self.imageView
+                                                           offsetFromCenter:centerOffset
+                                                           attachedToAnchor:location];
+            self.panAttachment.damping = 0.7f;
+            self.panAttachment.length = 0;
+            [self.animator addBehavior:self.panAttachment];
+            
+            break;
+
+        }
+        case UIGestureRecognizerStateChanged: {
+
+            self.panAttachment.anchorPoint = location;
+
+            break;
+
+        }
+        case UIGestureRecognizerStateCancelled:
+        case UIGestureRecognizerStateEnded: {
+            
+            CGPoint velocity = [gesture velocityInView:self];
+            
+            BOOL velocityThresholdReached = fabs(velocity.x) > 400 || fabs(velocity.y) > 400;
+            
+            if (velocityThresholdReached) {
+                
+                [self.animator removeBehavior:self.panAttachment];
+                
+                 self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[self.imageView] mode:UIPushBehaviorModeInstantaneous];
+                self.pushBehavior.pushDirection = CGVectorMake(velocity.x / 5.0f, velocity.y / 5.0f);
+                [self.animator addBehavior:self.pushBehavior];
+                
+                __weak typeof(self) weakSelf = self;
+                
+                self.pushBehavior.action = ^{
+                    
+                    BOOL viewOutOfFrame = !CGRectIntersectsRect(weakSelf.imageView.frame, weakSelf.bounds);
+                    //BOOL viewOutOfFrame = !CGRectIntersectsRect(weakSelf.frame, weakSelf.superview.bounds);
+                    if (viewOutOfFrame) {
+                        [weakSelf.animator removeAllBehaviors];
+                    }
+
+                };
+
+            } else {
+
+                [self.animator removeAllBehaviors];
+                
+                CGPoint center = CGPointMake(CGRectGetWidth(self.bounds) / 2.f, CGRectGetHeight(self.bounds) / 2.f);
+                UISnapBehavior *snapBefavior = [[UISnapBehavior alloc] initWithItem:self.imageView snapToPoint:center];
+                snapBefavior.damping = 0.7;
+                [self.animator addBehavior:snapBefavior];
+                
+            }
+            
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+
 
 @end
