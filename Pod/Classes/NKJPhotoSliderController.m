@@ -80,6 +80,7 @@ typedef enum : NSUInteger {
     self.backgroundColor = [UIColor blackColor];
     self.imageViews = [NSMutableArray array];
     self.currentPage = 0;
+    self.enableDynamicsAnimation = NO;
 }
 
 - (void)viewDidLoad
@@ -128,6 +129,7 @@ typedef enum : NSUInteger {
     for (id imageResource in [self imageResources]) {
         
         NKJPhotoSliderImageView *imageView = [[NKJPhotoSliderImageView alloc] initWithFrame:frame];
+        imageView.enableDynamicsAnimation = self.enableDynamicsAnimation;
         [self.scrollView addSubview:imageView];
         
         if (self.usingImageType == NKJPhotoSliderControllerUsingImageTypeURL) {
@@ -491,7 +493,7 @@ typedef enum : NSUInteger {
 
 #pragma mark - NKJPhotoSliderImageViewDelegate
 
-- (void) photoSliderImageViewDidEndZooming:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale
+- (void)photoSliderImageViewDidEndZooming:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale
 {
     if (scale <= 1.0) {
 
@@ -527,6 +529,36 @@ typedef enum : NSUInteger {
                          }
                          completion:nil];
     }
+}
+
+- (void)photoSliderImageViewDidVanish:(NKJPhotoSliderImageView *)imageView
+{
+    if (self.closeAnimating) {
+        return;
+    }
+    self.closeAnimating = YES;
+    
+    if ([self.delegate respondsToSelector:@selector(photoSliderControllerWillDismiss:)]) {
+        [self.delegate photoSliderControllerWillDismiss:self];
+    }
+
+    [UIView animateWithDuration:0.4
+                          delay:0.f
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         
+                         self.scrollView.alpha = 0.f;
+                         self.backgroundView.alpha = 0.f;
+                         self.closeButton.alpha = 0.f;
+                         self.view.alpha = 0.f;
+                         
+                     }
+                     completion:^(BOOL finished) {
+                         
+                         [self dissmissViewControllerAnimated:NO];
+                         self.closeAnimating = NO;
+                         
+                     }];
 }
 
 #pragma mark - Private Method

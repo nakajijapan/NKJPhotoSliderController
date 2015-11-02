@@ -25,6 +25,7 @@
 @property (nonatomic) UIColor *backgroundColor;
 @property (nonatomic) BOOL visiblePageControl;
 @property (nonatomic) BOOL visibleCloseButton;
+@property (nonatomic) BOOL enableDynamicsAnimation;
 @property (nonatomic) id<NKJPhotoSliderControllerDelegate> delegate;
 
 - (id)initWithImageURLs:(NSArray *)imageURLs;

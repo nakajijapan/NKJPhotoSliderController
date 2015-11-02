@@ -42,6 +42,7 @@
 
 - (void)initialize
 {
+    self.enableDynamicsAnimation = NO;
     self.backgroundColor = [UIColor clearColor];
     self.userInteractionEnabled = YES;
     
@@ -81,10 +82,17 @@
                                       UIViewAutoresizingFlexibleBottomMargin;
     
     
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self
-                                                                                 action:@selector(gestureRecognizerDidPan:)];
-    [self.imageView addGestureRecognizer:panGesture];
-    self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
+}
+
+- (void)setEnableDynamicsAnimation:(BOOL)enableDynamicsAnimation
+{
+    _enableDynamicsAnimation = enableDynamicsAnimation;
+    if (_enableDynamicsAnimation) {
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                                     action:@selector(gestureRecognizerDidPan:)];
+        [self.imageView addGestureRecognizer:panGesture];
+        self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
+    }
 }
 
 - (void)layoutSubviews
@@ -265,6 +273,10 @@
                     
                     if (!CGRectIntersectsRect(weakSelf.imageView.frame, weakSelf.bounds)) {
                         [weakSelf.animator removeAllBehaviors];
+                        
+                        if ([weakSelf.delegate respondsToSelector:@selector(photoSliderImageViewDidVanish:)]) {
+                            [weakSelf.delegate photoSliderImageViewDidVanish:self];
+                        }
                     }
 
                 };
