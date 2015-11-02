@@ -463,13 +463,26 @@ typedef enum : NSUInteger {
 
 - (void)transitionDestinationImageView:(UIImageView *)sourceImageView
 {
-    CGRect frame = CGRectZero;
-
+    CGFloat height = 0.f;
+    CGFloat width = 0.f;
+    
     if (sourceImageView.image != nil) {
+        
+        
+        if ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortrait ||
+            [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortraitUpsideDown) {
+            
+            height = (sourceImageView.bounds.size.width * sourceImageView.image.size.height) / sourceImageView.image.size.width;
+            width  = CGRectGetWidth(sourceImageView.bounds);
 
-        CGFloat height = (sourceImageView.image.size.height * sourceImageView.bounds.size.width) / sourceImageView.image.size.width;
-        frame = CGRectMake(0.f, 0.f, CGRectGetWidth(sourceImageView.bounds), height);
-        sourceImageView.frame = frame;
+        } else {
+
+            height = CGRectGetHeight(sourceImageView.bounds);
+            width  = (sourceImageView.bounds.size.height * sourceImageView.image.size.width) / sourceImageView.image.size.height;
+            
+        }
+
+        sourceImageView.frame = CGRectMake(0.f, 0.f, width, height);
 
     }
 

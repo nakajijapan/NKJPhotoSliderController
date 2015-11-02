@@ -176,19 +176,30 @@
 {
     NSIndexPath *indexPath = [self.collectionView indexPathsForVisibleItems].firstObject;
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-
     CGRect frame = CGRectZero;
-    if (sourceImageView.image.size.height < sourceImageView.image.size.width) {
-        CGFloat width = (sourceImageView.image.size.width * sourceImageView.bounds.size.width) / sourceImageView.image.size.height;
-        CGFloat x = width * 0.5 - CGRectGetWidth(cell.imageView.bounds) * 0.5;
-        frame = CGRectMake(- x, 0.f, width, CGRectGetHeight(cell.imageView.bounds));
+    
+    if ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortrait ||
+        [UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortraitUpsideDown) {
+
+        if (sourceImageView.image.size.height < sourceImageView.image.size.width) {
+
+            CGFloat width = (sourceImageView.image.size.width * sourceImageView.bounds.size.width) / sourceImageView.image.size.height;
+            CGFloat x = width * 0.5f - CGRectGetWidth(cell.imageView.bounds) * 0.5f;
+            frame = CGRectMake(- x, 0.f, width, CGRectGetHeight(cell.imageView.bounds));
+            
+        } else {
+            frame = CGRectMake(0.f, 0.f, CGRectGetWidth(cell.imageView.bounds), CGRectGetHeight(cell.imageView.bounds));
+        }
         
     } else {
-        frame = CGRectMake(0.f, 0.f, CGRectGetWidth(cell.imageView.bounds), CGRectGetHeight(cell.imageView.bounds));
+
+        CGFloat height = (sourceImageView.image.size.height * CGRectGetWidth(cell.imageView.bounds)) / sourceImageView.image.size.width;
+        CGFloat y = height * 0.5f - CGRectGetHeight(cell.imageView.bounds) * 0.5f;
+        frame = CGRectMake(0.f, - y, CGRectGetWidth(cell.imageView.bounds), height);
+
     }
     
     sourceImageView.frame = frame;
-
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
