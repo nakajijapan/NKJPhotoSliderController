@@ -137,7 +137,7 @@
     photoSlider.delegate = self;
     photoSlider.transitioningDelegate = self;
     photoSlider.currentPage = indexPath.row;
-    photoSlider.enableDynamicsAnimation = YES;
+    //photoSlider.enableDynamicsAnimation = YES;
     
     [self presentViewController:photoSlider animated:YES completion:^{
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
