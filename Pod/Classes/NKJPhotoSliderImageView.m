@@ -292,7 +292,7 @@
                         [weakSelf.animator removeAllBehaviors];
                         
                         if ([weakSelf.delegate respondsToSelector:@selector(photoSliderImageViewDidVanish:)]) {
-                            [weakSelf.delegate photoSliderImageViewDidVanish:self];
+                            [weakSelf.delegate photoSliderImageViewDidVanish:weakSelf];
                         }
                     }
 
