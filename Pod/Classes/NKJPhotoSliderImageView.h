@@ -14,6 +14,7 @@
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) id<NKJPhotoSliderImageViewDelegate> delegate;
+@property (nonatomic) BOOL enableDynamicsAnimation;
 - (void)loadImage:(NSURL *)imageURL;
 - (void)setImage:(UIImage *)image;
 - (void)layoutImageView:(UIImage *)image;
@@ -23,4 +24,5 @@
 @protocol NKJPhotoSliderImageViewDelegate <NSObject>
 @optional
 - (void)photoSliderImageViewDidEndZooming:(NKJPhotoSliderImageView *)imageView atScale:(CGFloat)scale;
+- (void)photoSliderImageViewDidVanish:(NKJPhotoSliderImageView *)imageView;
 @end

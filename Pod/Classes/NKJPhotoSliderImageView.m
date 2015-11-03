@@ -10,8 +10,11 @@
 #import "NKJPhotoSliderProgressView.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
-@interface NKJPhotoSliderImageView () <UIScrollViewDelegate>
+@interface NKJPhotoSliderImageView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) NKJPhotoSliderProgressView *progressView;
+@property (nonatomic) UIDynamicAnimator *animator;
+@property (nonatomic) UIAttachmentBehavior *panAttachment;
+@property (nonatomic) UIPushBehavior *pushBehavior;
 @end
 
 @implementation NKJPhotoSliderImageView
@@ -39,6 +42,7 @@
 
 - (void)initialize
 {
+    self.enableDynamicsAnimation = NO;
     self.backgroundColor = [UIColor clearColor];
     self.userInteractionEnabled = YES;
     
@@ -76,6 +80,29 @@
                                       UIViewAutoresizingFlexibleTopMargin |
                                       UIViewAutoresizingFlexibleHeight |
                                       UIViewAutoresizingFlexibleBottomMargin;
+    
+    
+}
+
+- (void)setEnableDynamicsAnimation:(BOOL)enableDynamicsAnimation
+{
+    _enableDynamicsAnimation = enableDynamicsAnimation;
+    if (_enableDynamicsAnimation) {
+
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                                     action:@selector(gestureRecognizerDidPan:)];
+        panGesture.delegate = self;
+        [self.imageView addGestureRecognizer:panGesture];
+        self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
+
+    } else {
+
+        for (UIGestureRecognizer *gesture in self.imageView.gestureRecognizers) {
+            [self.imageView removeGestureRecognizer:gesture];
+        }
+        self.animator = nil;
+        
+    }
 }
 
 - (void)layoutSubviews
@@ -196,5 +223,99 @@
         [self.delegate photoSliderImageViewDidEndZooming:self atScale:scale];
     }
 }
+
+#pragma mark - UIPanGestureRecognizer
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer {
+    CGPoint velocity = [gestureRecognizer velocityInView:self.imageView];
+    return fabs(velocity.y) > fabs(velocity.x);
+}
+
+#pragma mark - Actions
+
+- (void)gestureRecognizerDidPan:(UIPanGestureRecognizer *)gesture
+{
+    if ([self.scrollView isZooming]) {
+        return;
+    }
+
+    CGPoint location = [gesture locationInView:self];
+    
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan: {
+            
+            [self.animator removeAllBehaviors];
+            
+            UIDynamicItemBehavior *rotationBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.imageView]];
+            rotationBehavior.allowsRotation = YES;
+            rotationBehavior.angularResistance = 10.0f;
+            [self.animator addBehavior:rotationBehavior];
+            
+            CGPoint viewCenter = self.imageView.center;
+            UIOffset centerOffset = UIOffsetMake(location.x - viewCenter.x, location.y - viewCenter.y);
+            
+            self.panAttachment = [[UIAttachmentBehavior alloc] initWithItem:self.imageView
+                                                           offsetFromCenter:centerOffset
+                                                           attachedToAnchor:location];
+            self.panAttachment.damping = 0.7f;
+            self.panAttachment.length = 0;
+            [self.animator addBehavior:self.panAttachment];
+            
+            break;
+
+        }
+        case UIGestureRecognizerStateChanged: {
+
+            self.panAttachment.anchorPoint = location;
+
+            break;
+
+        }
+        case UIGestureRecognizerStateCancelled:
+        case UIGestureRecognizerStateEnded: {
+            
+            CGPoint velocity = [gesture velocityInView:self];
+            
+            if (fabs(velocity.x) > 400 || fabs(velocity.y) > 400) {
+                
+                [self.animator removeBehavior:self.panAttachment];
+                
+                 self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[self.imageView] mode:UIPushBehaviorModeInstantaneous];
+                self.pushBehavior.pushDirection = CGVectorMake(velocity.x / 5.0f, velocity.y / 5.0f);
+                [self.animator addBehavior:self.pushBehavior];
+                
+                __weak typeof(self) weakSelf = self;
+                
+                self.pushBehavior.action = ^{
+                    
+                    if (!CGRectIntersectsRect(weakSelf.imageView.frame, weakSelf.bounds)) {
+                        [weakSelf.animator removeAllBehaviors];
+                        
+                        if ([weakSelf.delegate respondsToSelector:@selector(photoSliderImageViewDidVanish:)]) {
+                            [weakSelf.delegate photoSliderImageViewDidVanish:weakSelf];
+                        }
+                    }
+
+                };
+
+            } else {
+
+                [self.animator removeAllBehaviors];
+                
+                CGPoint center = CGPointMake(CGRectGetWidth(self.bounds) / 2.f, CGRectGetHeight(self.bounds) / 2.f);
+                UISnapBehavior *snapBefavior = [[UISnapBehavior alloc] initWithItem:self.imageView snapToPoint:center];
+                snapBefavior.damping = 0.7;
+                [self.animator addBehavior:snapBefavior];
+                
+            }
+            
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+
 
 @end
