@@ -90,6 +90,7 @@
     if (_enableDynamicsAnimation) {
         UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                                                      action:@selector(gestureRecognizerDidPan:)];
+        panGesture.delegate = self;
         [self.imageView addGestureRecognizer:panGesture];
         self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
     }
@@ -214,7 +215,14 @@
     }
 }
 
-#pragma mark - UIGestureRecognizer
+#pragma mark - UIPanGestureRecognizer
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer {
+    CGPoint velocity = [gestureRecognizer velocityInView:self.imageView];
+    return fabs(velocity.y) > fabs(velocity.x);
+}
+
+#pragma mark - Actions
 
 - (void)gestureRecognizerDidPan:(UIPanGestureRecognizer *)gesture
 {
