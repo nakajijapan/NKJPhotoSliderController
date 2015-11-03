@@ -10,7 +10,7 @@
 #import "NKJPhotoSliderProgressView.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
-@interface NKJPhotoSliderImageView () <UIScrollViewDelegate>
+@interface NKJPhotoSliderImageView () <UIScrollViewDelegategd>
 @property (nonatomic) NKJPhotoSliderProgressView *progressView;
 @property (nonatomic) UIDynamicAnimator *animator;
 @property (nonatomic) UIAttachmentBehavior *panAttachment;
@@ -88,11 +88,20 @@
 {
     _enableDynamicsAnimation = enableDynamicsAnimation;
     if (_enableDynamicsAnimation) {
+
         UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                                                      action:@selector(gestureRecognizerDidPan:)];
         panGesture.delegate = self;
         [self.imageView addGestureRecognizer:panGesture];
         self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
+
+    } else {
+
+        for (UIGestureRecognizer *gesture in self.imageView.gestureRecognizers) {
+            [self.imageView removeGestureRecognizer:gesture];
+        }
+        self.animator = nil;
+        
     }
 }
 
