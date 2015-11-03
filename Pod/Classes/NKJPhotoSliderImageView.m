@@ -10,7 +10,7 @@
 #import "NKJPhotoSliderProgressView.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
-@interface NKJPhotoSliderImageView () <UIScrollViewDelegategd>
+@interface NKJPhotoSliderImageView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) NKJPhotoSliderProgressView *progressView;
 @property (nonatomic) UIDynamicAnimator *animator;
 @property (nonatomic) UIAttachmentBehavior *panAttachment;
