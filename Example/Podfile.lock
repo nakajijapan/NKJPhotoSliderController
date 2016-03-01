@@ -1,9 +1,9 @@
 PODS:
-  - NKJPhotoSliderController (0.5.2):
+  - NKJPhotoSliderController (0.7.0):
     - SDWebImage
-  - SDWebImage (3.7.3):
-    - SDWebImage/Core (= 3.7.3)
-  - SDWebImage/Core (3.7.3)
+  - SDWebImage (3.7.5):
+    - SDWebImage/Core (= 3.7.5)
+  - SDWebImage/Core (3.7.5)
 
 DEPENDENCIES:
   - NKJPhotoSliderController (from `../`)
@@ -13,7 +13,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  NKJPhotoSliderController: e635b60aee3a88dc41d003035a070bcd3094d65d
-  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  NKJPhotoSliderController: 8b05d7860e3595f00c279486c6015170bc701607
+  SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0

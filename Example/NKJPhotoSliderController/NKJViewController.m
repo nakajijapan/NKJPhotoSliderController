@@ -36,14 +36,14 @@
     [super viewDidLoad];
    
     self.images = @[
-                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image001.jpg"],
-                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image002.jpg"],
-                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image003.jpg"],
-                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image004.jpg"],
-                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image005.jpg"],
-                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image006.jpg"],
-                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image007.jpg"],
-                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Example/Resources/image008.jpg"]
+                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Resources/image001.jpg"],
+                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Resources/image002.jpg"],
+                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Resources/image003.jpg"],
+                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Resources/image004.jpg"],
+                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Resources/image005.jpg"],
+                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Resources/image006.jpg"],
+                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Resources/image007.jpg"],
+                    [NSURL URLWithString:@"https://raw.githubusercontent.com/nakajijapan/PhotoSlider/master/Resources/image008.jpg"]
                     ];
 
 }

@@ -253,6 +253,7 @@
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				770A9F56DF8D1DCF0ABEB3F0 /* Copy Pods Resources */,
+				77FFDDBDFEA46116B34B59DA /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -272,6 +273,7 @@
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
 				5E03A93A6751B94DA71C956D /* Copy Pods Resources */,
+				18FD5C07D80EE24537D1FF39 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -373,6 +375,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		18FD5C07D80EE24537D1FF39 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		3D48B4C22E8AA2E8CDB83FAB /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -461,6 +478,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NKJPhotoSliderController/Pods-NKJPhotoSliderController-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		77FFDDBDFEA46116B34B59DA /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NKJPhotoSliderController/Pods-NKJPhotoSliderController-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
