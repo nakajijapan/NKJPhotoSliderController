@@ -141,7 +141,7 @@
                                              placeholderImage:nil
                                                       options:SDWebImageCacheMemoryOnly progress:^(NSInteger receivedSize, NSInteger expectedSize) {
 
-                                                          CGFloat progress = receivedSize / expectedSize;
+                                                          CGFloat progress = (CGFloat)receivedSize / (CGFloat)expectedSize;
                                                           [self.progressView animateCurveToProgress:progress];
 
                                                       }
