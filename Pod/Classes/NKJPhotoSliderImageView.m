@@ -138,18 +138,23 @@
 {
     self.progressView.hidden = NO;
     [self.imageView sd_setImageWithPreviousCachedImageWithURL:imageURL
-                                          andPlaceholderImage:nil
-                                                      options:SDWebImageCacheMemoryOnly
-                                                     progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                                         CGFloat progress = receivedSize / expectedSize;
-                                                         [self.progressView animateCurveToProgress:progress];
-                                                     }
+                                             placeholderImage:nil
+                                                      options:SDWebImageCacheMemoryOnly progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                                          
+                                                          CGFloat progress = (CGFloat)receivedSize / (CGFloat)expectedSize;
+                                                          NSLog(@"progress %f re(%zd)", progress, receivedSize);
+
+                                                          [self.progressView animateCurveToProgress:progress];
+                                                          
+                                                      }
                                                     completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                                        
                                                         self.progressView.hidden = YES;
                                                         
                                                         if (error == nil) {
                                                             [self layoutImageView:image];
                                                         }
+                                                        
                                                     }];
 }
 
