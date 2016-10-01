@@ -1,15 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
-#use_frameworks!
 
-target 'NKJPhotoSliderController', :exclusive => true do
+target 'NKJPhotoSliderController' do
   pod "NKJPhotoSliderController", :path => "../"
 end
 
-target 'Tests', :exclusive => true do
-  pod "NKJPhotoSliderController", :path => "../"
-end
-
-target 'NKJPhotoSliderControllerUITests', :exclusive => true do
+target 'NKJPhotoSliderControllerUITests' do
   pod "NKJPhotoSliderController", :path => "../"
 end
 
