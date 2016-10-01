@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B64F56C872A83E6FF1802E1 /* libPods-NKJPhotoSliderControllerUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E9232798417AB3E55041C47 /* libPods-NKJPhotoSliderControllerUITests.a */; };
+		282E70D63EFF61A64DDACD15 /* Pods_NKJPhotoSliderController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97242B0CE375F7780A33CDE /* Pods_NKJPhotoSliderController.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -17,7 +17,7 @@
 		6003F5A1195388D20070C39A /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6003F59F195388D20070C39A /* Main_iPhone.storyboard */; };
 		6003F5A7195388D20070C39A /* NKJViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5A6195388D20070C39A /* NKJViewController.m */; };
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
-		6C0152F2E43DDED948C34EDC /* libPods-NKJPhotoSliderController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 007F9511ADE5A06FDB3AF15A /* libPods-NKJPhotoSliderController.a */; };
+		7C7BE62C40D03E5C09F58D6A /* Pods_NKJPhotoSliderControllerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFBB2C38574D1B5EC10E5F7E /* Pods_NKJPhotoSliderControllerUITests.framework */; };
 		DCABCF031BE20748009CE11E /* ImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABCF021BE20748009CE11E /* ImageCollectionViewCell.m */; };
 		DCABCF0B1BE22AF1009CE11E /* NKJPhotoSliderControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCABCF0A1BE22AF1009CE11E /* NKJPhotoSliderControllerUITests.swift */; };
 		DCF885571BB54389005F0214 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCF885561BB54389005F0214 /* LaunchScreen.storyboard */; };
@@ -34,9 +34,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		007F9511ADE5A06FDB3AF15A /* libPods-NKJPhotoSliderController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NKJPhotoSliderController.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A4B4C9C072248354C673C26 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		3E9232798417AB3E55041C47 /* libPods-NKJPhotoSliderControllerUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NKJPhotoSliderControllerUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55C0B16A1A0E0CDCED4325AF /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* NKJPhotoSliderController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NKJPhotoSliderController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -60,6 +58,7 @@
 		A8DA289279D437E5B7FAC76D /* NKJPhotoSliderController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = NKJPhotoSliderController.podspec; path = ../NKJPhotoSliderController.podspec; sourceTree = "<group>"; };
 		B5C9226D21CDC001D7EED578 /* Pods-NKJPhotoSliderControllerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NKJPhotoSliderControllerUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NKJPhotoSliderControllerUITests/Pods-NKJPhotoSliderControllerUITests.release.xcconfig"; sourceTree = "<group>"; };
 		CBE7E39D82D0E74F013704C1 /* Pods-NKJPhotoSliderController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NKJPhotoSliderController.release.xcconfig"; path = "Pods/Target Support Files/Pods-NKJPhotoSliderController/Pods-NKJPhotoSliderController.release.xcconfig"; sourceTree = "<group>"; };
+		D97242B0CE375F7780A33CDE /* Pods_NKJPhotoSliderController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NKJPhotoSliderController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCABCF011BE20748009CE11E /* ImageCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCollectionViewCell.h; sourceTree = "<group>"; };
 		DCABCF021BE20748009CE11E /* ImageCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCollectionViewCell.m; sourceTree = "<group>"; };
 		DCABCF081BE22AF0009CE11E /* NKJPhotoSliderControllerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NKJPhotoSliderControllerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,6 +67,7 @@
 		DCD552CF1BAC018700BFE15E /* NKJPhotoSliderController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NKJPhotoSliderController.framework; path = "Pods/../build/Debug-iphoneos/NKJPhotoSliderController.framework"; sourceTree = "<group>"; };
 		DCF885561BB54389005F0214 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F2FCE46755405D42599186B0 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		FFBB2C38574D1B5EC10E5F7E /* Pods_NKJPhotoSliderControllerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NKJPhotoSliderControllerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +78,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				6C0152F2E43DDED948C34EDC /* libPods-NKJPhotoSliderController.a in Frameworks */,
+				282E70D63EFF61A64DDACD15 /* Pods_NKJPhotoSliderController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B64F56C872A83E6FF1802E1 /* libPods-NKJPhotoSliderControllerUITests.a in Frameworks */,
+				7C7BE62C40D03E5C09F58D6A /* Pods_NKJPhotoSliderControllerUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,9 +135,9 @@
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
-				007F9511ADE5A06FDB3AF15A /* libPods-NKJPhotoSliderController.a */,
-				3E9232798417AB3E55041C47 /* libPods-NKJPhotoSliderControllerUITests.a */,
 				9F31FEBBD5075CF32D66AE90 /* libPods-Tests.a */,
+				D97242B0CE375F7780A33CDE /* Pods_NKJPhotoSliderController.framework */,
+				FFBB2C38574D1B5EC10E5F7E /* Pods_NKJPhotoSliderControllerUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
