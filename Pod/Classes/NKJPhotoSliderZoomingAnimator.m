@@ -7,6 +7,7 @@
 //
 
 #import "NKJPhotoSliderZoomingAnimator.h"
+#import "UIView+NKJPhotoSlider.h"
 
 @implementation NKJPhotoSliderZoomingAnimator
 
@@ -39,10 +40,7 @@
     UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIView *containerView = [transitionContext containerView];
     
-    UIView *snapshotView = [fromViewController.view resizableSnapshotViewFromRect:fromViewController.view.frame
-                                                               afterScreenUpdates:YES
-                                                                    withCapInsets:UIEdgeInsetsZero];
-    
+    UIImageView *snapshotView = [[UIImageView alloc] initWithImage: [fromViewController.view nkj_snapshotImage]];
     [containerView addSubview:snapshotView];
     
     toViewController.view.alpha = 0.f;
