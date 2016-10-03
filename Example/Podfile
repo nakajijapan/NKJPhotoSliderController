@@ -1,15 +1,16 @@
-source 'https://github.com/CocoaPods/Specs.git'
-#use_frameworks!
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
 
-target 'NKJPhotoSliderController', :exclusive => true do
+target 'NKJPhotoSliderController' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for NKJPhotoSliderController
   pod "NKJPhotoSliderController", :path => "../"
-end
 
-target 'Tests', :exclusive => true do
-  pod "NKJPhotoSliderController", :path => "../"
-end
+  target 'NKJPhotoSliderControllerUITests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
 
-target 'NKJPhotoSliderControllerUITests', :exclusive => true do
-  pod "NKJPhotoSliderController", :path => "../"
 end
-

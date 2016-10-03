@@ -7,7 +7,7 @@
 //
 
 #import "NKJViewController.h"
-#import <NKJPhotoSliderController.h>
+#import "NKJPhotoSliderController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ImageCollectionViewCell.h"
 
